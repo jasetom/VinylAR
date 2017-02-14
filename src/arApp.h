@@ -8,6 +8,8 @@
 
 #include "ofxiOS.h"
 #include "AVFoundationVideoGrabber.h"
+#include "ofxSURFTracker.h"
+
 
 class arApp : public ofxiOSApp {
 	
@@ -28,12 +30,20 @@ class arApp : public ofxiOSApp {
         void gotMemoryWarning();
         void deviceOrientationChanged(int newOrientation);
     
+        //video recording/displaying
         ofFpsCounter fps;
-        //pixels copy to ofImage
-        ofPixels p;
-        AVFoundationVideoGrabber fGrabber;
-        ofImage img;
-        ofTrueTypeFont font;
+        ofPixels tempPix;
+        AVFoundationVideoGrabber vidGrabber;
+        ofImage videoImg;
+        int counter; //counter
+
+    
+        //tracking
+        ofxSURFTracker surfTracker;
+        ofImage markerImg;
+
+        bool bDetect;
+        bool bCreateHomography;
 
 
 };

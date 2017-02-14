@@ -1,0 +1,30 @@
+{
+  "DVTSourceControlWorkspaceBlueprintPrimaryRemoteRepositoryKey" : "EFDB30128985993E4204C861A6364A54603BEB5C",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyRepositoryLocationsKey" : {
+
+  },
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyStatesKey" : {
+    "EFDB30128985993E4204C861A6364A54603BEB5C" : 9223372036854775807,
+    "7987E4974CF048805F1CA9E9A39AFBF40C3E54F2" : 9223372036854775807
+  },
+  "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "6EDA57F4-FA04-49AF-932E-BAEDFF5D12F3",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
+    "EFDB30128985993E4204C861A6364A54603BEB5C" : "VinylARv0_2\/",
+    "7987E4974CF048805F1CA9E9A39AFBF40C3E54F2" : "..\/..\/addons\/ofxSURFTracker"
+  },
+  "DVTSourceControlWorkspaceBlueprintNameKey" : "VinylAR2",
+  "DVTSourceControlWorkspaceBlueprintVersion" : 204,
+  "DVTSourceControlWorkspaceBlueprintRelativePathToProjectKey" : "VinylAR2.xcodeproj",
+  "DVTSourceControlWorkspaceBlueprintRemoteRepositoriesKey" : [
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "github.com:jasetom\/ofxSURFTracker.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "7987E4974CF048805F1CA9E9A39AFBF40C3E54F2"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "github.com:jasetom\/VinylAR.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "EFDB30128985993E4204C861A6364A54603BEB5C"
+    }
+  ]
+}
