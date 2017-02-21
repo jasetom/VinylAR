@@ -9,6 +9,7 @@
 #include "ofxiOS.h"
 #include "AVFoundationVideoGrabber.h"
 #include "ofxSURFTracker.h"
+#include "OrbTracker.hpp"
 
 
 class arApp : public ofxiOSApp {
@@ -39,7 +40,8 @@ class arApp : public ofxiOSApp {
 
     
         //tracking
-        ofxSURFTracker surfTracker;
+        OrbTracker orbTracker;
+//        ofxSURFTracker surfTracker;
         ofImage markerImg;
 
         bool bDetect;

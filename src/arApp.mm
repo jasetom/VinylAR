@@ -12,18 +12,18 @@ void arApp::setup(){
     //Set orientation to portait
     ofSetOrientation(OF_ORIENTATION_DEFAULT);
     ofSetVerticalSync(true);
-    ofSetFrameRate(25);
+    ofSetFrameRate(60);
     //innitiate video grabber
     vidGrabber.setDevice(0);
     
-    vidGrabber.initGrabber(40,80);
+    vidGrabber.initGrabber(10,10);
     
     //load up tracker image and analyse it
     markerImg.load(ofToDataPath("images/marker1.jpg"));
     
     //analyse image to get its features
-    surfTracker.analyseImage(markerImg);
-    surfTracker.createBounds();
+    orbTracker.analyseImage(markerImg);
+    orbTracker.createBoundaries();
 //    surfTracker.DrawMatches(false);
 //    ofSetFrameRate(20);
     //init counter
@@ -37,34 +37,23 @@ void arApp::setup(){
 void arApp::update(){
     //update video grabber
     vidGrabber.update();
+    
 //    //if the frame is new create new picture out of pixels
-//    
     if(vidGrabber.isFrameNew()){
-        counter++;
+//        counter++;
 
 //        //create new video image
         tempPix.setFromPixels(vidGrabber.getPixels(), vidGrabber.getWidth(), vidGrabber.getHeight(), vidGrabber.getPixelFormat());
         videoImg.setFromPixels(tempPix);
-//        fps.newFrame();
-        
-        //
-        
+
+        orbTracker.detect(vidGrabber.getPixels(),vidGrabber.getWidth(), vidGrabber.getHeight());
+
         if(bDetect){
-            if(counter%3==0){
-            //do detection of the features on video grabber
-                surfTracker.detect(vidGrabber.getPixels(),vidGrabber.getWidth(), vidGrabber.getHeight());
-
+            if(orbTracker.match(orbTracker.getImgKeyPoints(),orbTracker.getImgDescriptors(),orbTracker.getImgBoundaries())>1){
+               orbTracker.createHomography(orbTracker.getImgKeyPoints(),orbTracker.getImgBoundaries());
             }
-            if(surfTracker.match(surfTracker.getObjectKeyPoints(),surfTracker.getObjectDescriptors(),surfTracker.getObjectBounds())!=0){
-                //
-                surfTracker.createHomography(surfTracker.getObjectKeyPoints(),surfTracker.getObjectBounds());
-                //
-            }
-
         }
     }
-        
-    
 }
     
 
@@ -80,7 +69,7 @@ void arApp::draw(){
 //    ofPopMatrix();
 ////    // draw the tracking image on top of the camera image
 ////    if(bCreateHomography){
-    surfTracker.draw();
+    orbTracker.draw();
 
     
 }

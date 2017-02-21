@@ -27,6 +27,7 @@
 		BD2DC8B4CC2C2BC0DD128073 /* AssetsLibrary.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CF6F9415A1CDA4F93172643E /* AssetsLibrary.framework */; };
 		D3301F6A0B43BB293ED97C1D /* ofxCvShortImage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8A4DD23693DFAB8EC05FAA5D /* ofxCvShortImage.cpp */; };
 		E212C821D1064B92DD953A42 /* ofxCvHaarFinder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A16CBF2E8CFE43AF54FE6F5 /* ofxCvHaarFinder.cpp */; };
+		E29125AE1E560C5700950261 /* OrbTracker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E29125AC1E560C5700950261 /* OrbTracker.cpp */; };
 		E2C87DD91E49E79F003035BB /* arAppViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = E2C87DCC1E49E79F003035BB /* arAppViewController.mm */; };
 		E2C87DDA1E49E79F003035BB /* MyAppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = E2C87DCF1E49E79F003035BB /* MyAppDelegate.mm */; };
 		E2C87DDB1E49E79F003035BB /* MyAppViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = E2C87DD11E49E79F003035BB /* MyAppViewController.mm */; };
@@ -229,6 +230,8 @@
 		DEA2EDC0AFD59176FDEDC222 /* ofxCvShortImage.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = ofxCvShortImage.h; path = ../../../addons/ofxOpenCv/src/ofxCvShortImage.h; sourceTree = SOURCE_ROOT; };
 		E14D3EF03E140F5604900412 /* tracking.hpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = tracking.hpp; path = ../../../addons/ofxOpenCv/libs/opencv/include/opencv2/video/tracking.hpp; sourceTree = SOURCE_ROOT; };
 		E21FF871B93E31DA43FE7E42 /* vec_distance_detail.hpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = vec_distance_detail.hpp; path = ../../../addons/ofxOpenCv/libs/opencv/include/opencv2/gpu/device/detail/vec_distance_detail.hpp; sourceTree = SOURCE_ROOT; };
+		E29125AC1E560C5700950261 /* OrbTracker.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = OrbTracker.cpp; sourceTree = "<group>"; };
+		E29125AD1E560C5700950261 /* OrbTracker.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = OrbTracker.hpp; sourceTree = "<group>"; };
 		E2C87DCB1E49E79F003035BB /* arAppViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = arAppViewController.h; sourceTree = "<group>"; };
 		E2C87DCC1E49E79F003035BB /* arAppViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = arAppViewController.mm; sourceTree = "<group>"; };
 		E2C87DCE1E49E79F003035BB /* MyAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyAppDelegate.h; sourceTree = "<group>"; };
@@ -829,6 +832,8 @@
 				E2C87DC41E49E79F003035BB /* arAppViewController */,
 				E2C87DCD1E49E79F003035BB /* MenuUI */,
 				E4D8936B11527B74007E1F53 /* main.mm */,
+				E29125AC1E560C5700950261 /* OrbTracker.cpp */,
+				E29125AD1E560C5700950261 /* OrbTracker.hpp */,
 				E4D8936D11527B74007E1F53 /* arApp.mm */,
 				E4D8936C11527B74007E1F53 /* arApp.h */,
 			);
@@ -885,6 +890,7 @@
 				TargetAttributes = {
 					1D6058900D05DD3D006BFB54 = {
 						DevelopmentTeam = 994383MWGC;
+						ProvisioningStyle = Automatic;
 					};
 				};
 			};
@@ -957,6 +963,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E29125AE1E560C5700950261 /* OrbTracker.cpp in Sources */,
 				E2C87DDB1E49E79F003035BB /* MyAppViewController.mm in Sources */,
 				E4D8936E11527B74007E1F53 /* main.mm in Sources */,
 				E4D8936F11527B74007E1F53 /* arApp.mm in Sources */,
@@ -990,13 +997,14 @@
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEVELOPMENT_TEAM = 994383MWGC;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = ofxiOS_Prefix.pch;
 				"GCC_WARN_64_TO_32_BIT_CONVERSION[arch=*64]" = NO;
 				INFOPLIST_FILE = "ofxiOS-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.2;
-				PRODUCT_BUNDLE_IDENTIFIER = uk.tomasj.VinylAR2;
+				PRODUCT_BUNDLE_IDENTIFIER = uk.tomasj.arapp2;
 				PRODUCT_NAME = "${TARGET_NAME}";
 				VALID_ARCHS = "$(ARCHS_STANDARD)";
 			};
@@ -1007,13 +1015,14 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEVELOPMENT_TEAM = 994383MWGC;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = ofxiOS_Prefix.pch;
 				"GCC_WARN_64_TO_32_BIT_CONVERSION[arch=*64]" = NO;
 				INFOPLIST_FILE = "ofxiOS-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.2;
-				PRODUCT_BUNDLE_IDENTIFIER = uk.tomasj.VinylAR2;
+				PRODUCT_BUNDLE_IDENTIFIER = uk.tomasj.arapp2;
 				PRODUCT_NAME = "${TARGET_NAME}";
 				VALID_ARCHS = "$(ARCHS_STANDARD)";
 			};
