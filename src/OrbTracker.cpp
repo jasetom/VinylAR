@@ -26,7 +26,7 @@ OrbTracker::OrbTracker(){
     minMatches = 13;
 
     //creating detector and matcher objs
-    detector = OrbFeatureDetector(nFeatures,1.2f,8,5,0,2,ORB::FAST_SCORE,5);
+    detector = OrbFeatureDetector(nFeatures,1.2f,8,30,0,2,ORB::HARRIS_SCORE,30);
     
     //http://docs.opencv.org/2.4/modules/features2d/doc/feature_detection_and_description.html#orb-orb
     //    OrbFeatureDetector(
@@ -196,6 +196,59 @@ void OrbTracker::detect(unsigned char *pix, int inputWidth, int inputHeight){
     //    cout << "descriptors scene: ";
     //    cout <<     descriptors_Scene.size();
 }
+
+//maybe implement this in the future instead
+//-----------------------------------------------------
+void OrbTracker::detect(Mat grayScaleVideo){
+    //checks screen for features and descriptors
+    
+    /***
+     code adapted from http://docs.opencv.org/doc/tutorials/features2d/feature_homography/feature_homography.html
+     ***/
+    
+    // clear existing keypoints from previous frame
+    cameraKeyPoints.clear();
+    //	objectBounds_Transformed.clear();
+    
+//    if(inputWidth != inputImg.getWidth() || inputHeight != inputImg.getHeight()){
+//        // this should only happen once
+//        inputImg.clear();
+//        inputImg.allocate(inputWidth, inputHeight);
+//        cout << "ofxSURFTracker : re-allocated the input image."<<endl;
+//    }
+    //    inputImg.clear();
+    //    inputImg.allocate(inputWidth, inputHeight);
+    // create the cvImage from the ofImage
+//    inputImg.setFromPixels(pix, inputWidth, inputHeight);
+    //    inputImg.setROI(ofRectangle(60,31,ofGetScreenWidth(),ofGetScreenHeight()));
+    
+    // ROI - region of interest
+    //    inputImg.setROI(ofRectangle(0,0,width,height));
+    
+    // take out the piece that we want to use.
+    //    croppedImg.setFromPixels(inputImg.getRoiPixels().getData(), ofGetScreenWidth(), ofGetScreenHeight());
+    
+    // make it into a trackable grayscale image
+//    trackImg = inputImg;
+    //    .setFromPixels(inputImg.getRoiPixels().getData(), ofGetScreenWidth(),ofGetScreenHeight());
+    //= croppedImg;
+    
+    
+    // get the Mat to do the feature detection on
+//    Mat imgMat = cvarrToMat(trackImg.getCvImage());
+    detector.detect(grayScaleVideo, cameraKeyPoints);
+    
+    //    cout << "keypoints scene: ";
+    //    cout << keyPoints_Scene.size();
+    
+    // Calculate descriptors (feature vectors)
+    extractor.compute(grayScaleVideo, cameraKeyPoints, cameraDescriptors);
+    
+    //    cout << "descriptors scene: ";
+    //    cout <<     descriptors_Scene.size();
+}
+
+
 
 void OrbTracker::createBoundaries(){
     

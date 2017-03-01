@@ -33,32 +33,54 @@ void arApp::setup(){
 //    opTracker.setup(vidGrabber.getWidth(), vidGrabber.getHeight());
     
     
-    
-    
+/////// smthg
+//    
+//    ofSetVerticalSync(true);
+//    ofSetFrameRate(60);
+//
+//    
+//    vidGrabber.initGrabber(640,480);
+//    
+//    //load up tracker image and analyse it
+//    markerImg.load(ofToDataPath("images/marker1.jpg"));
+//    
+//    //analyse image to get its features
+//    orbTracker.analyseImage(markerImg);
+//    orbTracker.createBoundaries();
+//
+//    counter=0;
+//    
+//    currentImgColor.allocate(vidGrabber.getWidth(), vidGrabber.getHeight());
+//    currentImgGray.allocate(vidGrabber.getWidth(), vidGrabber.getHeight());
+//    //    pastImgGray.allocate(vidGrabber.getWidth(), vidGrabber.getHeight());
+//    bgImgGray.allocate(vidGrabber.getWidth(), vidGrabber.getHeight());
+//    
+//    once = true;
+//    state = 1;
+//////
+
+    //basic setup for programm
+    vidGrabber.initGrabber(640,480);
     ofSetVerticalSync(true);
     ofSetFrameRate(60);
-
-    
-    vidGrabber.initGrabber(640,480);
     
     //load up tracker image and analyse it
     markerImg.load(ofToDataPath("images/marker1.jpg"));
     
+    ////OrbTracker
     //analyse image to get its features
     orbTracker.analyseImage(markerImg);
+    //create boundaries for the analysed image
     orbTracker.createBoundaries();
-
-    counter=0;
     
-    currentImgColor.allocate(vidGrabber.getWidth(), vidGrabber.getHeight());
-    currentImgGray.allocate(vidGrabber.getWidth(), vidGrabber.getHeight());
-    //    pastImgGray.allocate(vidGrabber.getWidth(), vidGrabber.getHeight());
-    bgImgGray.allocate(vidGrabber.getWidth(), vidGrabber.getHeight());
+    ////OpticalFlowTracker
+    //setup
+    opticalFlow.setup(640, 480);
     
-    once = true;
-    state = 1;
+    state =0;
     
-
+    
+    
     
     
     
@@ -70,75 +92,118 @@ void arApp::setup(){
 //--------------------------------------------------------------
 void arApp::update(){
     
+    
     vidGrabber.update();
-    
-    
     if(vidGrabber.isFrameNew()){
         
-        currentImgColor.setFromPixels(vidGrabber.getPixels().getData(), vidGrabber.getWidth(), vidGrabber.getHeight());
         
-        currentImgGray = currentImgColor;
+        //we tap screen and this all happens.
         
-        
-        currentImgGray.blurGaussian(6);
-        currentImgGray.threshold(75);
-        currentImgGray.blurGaussian(1);
-        
-        std::vector<cv::KeyPoint> keyPointsCurrentImgGray;
-        std::vector<cv::KeyPoint> keyPointsNextBgImgGray;
-        
-        //convert images to cv mats
-        Mat currentImgGrayMat = cvarrToMat(currentImgGray.getCvImage());
-        
-        Mat bgImgGrayMat = cvarrToMat(bgImgGray.getCvImage());
-        
-        //now we detect and match using ORB class:
-        orbTracker.detect(vidGrabber.getPixels().getData(),vidGrabber.getWidth(), vidGrabber.getHeight());
-        
-        //use matcher with state parameter and create homography when state is 1
-        if(state ==1){
-            orbTracker.match(orbTracker.getImgDescriptors(),state);
-            orbTracker.createHomography(orbTracker.getImgKeyPoints(),orbTracker.getImgBoundaries());
-        }
-        
-        //run this for the very first frame or if the keypoints are empty
-        if(once==true||orbTracker.getBoundariesKeyPoints().empty()){
-            keyPointsCurrentImgGray = orbTracker.getCameraKeyPoints();
-            cv::KeyPoint::convert(keyPointsCurrentImgGray, points_keyPoints);
-            
-            bgImgGrayMat = cvarrToMat(bgImgGray.getCvImage());
-            cv::FAST(bgImgGrayMat, keyPointsNextBgImgGray,30,true);
-            cv::KeyPoint::convert(keyPointsNextBgImgGray, points_nextPoints);
-            once = false;
-        }else{
-            if(!orbTracker.getBoundariesKeyPoints().empty() && state==1){
-                points_keyPoints = orbTracker.getBoundariesKeyPoints();
-                
-                state = 2;
+        if(orbMagic==true){
+            //if we dont have any boundaries yet, we run the detection function
+            if(orbTracker.getBoundariesKeyPoints().size()<3){
+                orbTracker.detect(vidGrabber.getPixels().getData(),vidGrabber.getWidth(),vidGrabber.getHeight());
+            }else{
+                //once we have more than 3 keypoints in boundaries we move to optical flow tracking
+                flow = true;
+            }
+            //once detection has been run we match and create homography, which creates boundaries keypoints.
+            if(orbTracker.match(orbTracker.getImgDescriptors(),1)>1){
+                orbTracker.createHomography(orbTracker.getImgKeyPoints(),orbTracker.getImgBoundaries());
             }
         }
         
-        //variables
-        cv::TermCriteria termcrit(CV_TERMCRIT_ITER|CV_TERMCRIT_EPS,20,0.03);
-        cv::vector<uchar> status;
-        cv::vector<float> err;
-        cv::Size winSize(20,20);
-        
-        //if we get 4 keypoints of boundaries, use optic flow to track points.
-        if(orbTracker.getBoundariesKeyPoints().size()>=4){
-            //track points using opticalFlowLK
-            cv::calcOpticalFlowPyrLK(bgImgGrayMat,currentImgGrayMat,points_keyPoints,points_nextPoints,status, err, winSize, 3, termcrit, 0);
-            
-            bgImgGray = currentImgGray;
-            bgImgGrayMat = currentImgGrayMat;
-            points_keyPoints = points_nextPoints;
+        if(flow==true){
+            //when we have 4 points in boundaries we pass them to optical flow function for easy tracking
+            opticalFlow.updateFlowImage(vidGrabber.getPixels().getData(),orbTracker.getBoundariesKeyPoints());
+            //disabling detection/tracking/matching from orbTracker
+            orbMagic = false;
+//            state = 1;
         }
-        
-        
     }
-    
-    
 }
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+//    vidGrabber.update();
+    
+    
+//    if(vidGrabber.isFrameNew()){
+//        
+//        currentImgColor.setFromPixels(vidGrabber.getPixels().getData(), vidGrabber.getWidth(), vidGrabber.getHeight());
+//        
+//        currentImgGray = currentImgColor;
+//        
+//        
+//        currentImgGray.blurGaussian(6);
+//        currentImgGray.threshold(75);
+//        currentImgGray.blurGaussian(1);
+//        
+//        std::vector<cv::KeyPoint> keyPointsCurrentImgGray;
+//        std::vector<cv::KeyPoint> keyPointsNextBgImgGray;
+//        
+//        //convert images to cv mats
+//        Mat currentImgGrayMat = cvarrToMat(currentImgGray.getCvImage());
+//        
+//        Mat bgImgGrayMat = cvarrToMat(bgImgGray.getCvImage());
+//        
+//        //now we detect and match using ORB class:
+//        orbTracker.detect(vidGrabber.getPixels().getData(),vidGrabber.getWidth(), vidGrabber.getHeight());
+////                orbTracker.detect(currentImgGrayMat);
+//
+//        
+//        //use matcher with state parameter and create homography when state is 1
+//        if(state ==1){
+//            orbTracker.match(orbTracker.getImgDescriptors(),state);
+//            orbTracker.createHomography(orbTracker.getImgKeyPoints(),orbTracker.getImgBoundaries());
+//        }
+//        
+//        //run this for the very first frame or if the keypoints are empty
+//        if(once==true||orbTracker.getBoundariesKeyPoints().empty()){
+//            keyPointsCurrentImgGray = orbTracker.getCameraKeyPoints();
+//            cv::KeyPoint::convert(keyPointsCurrentImgGray, points_keyPoints);
+//            
+//            bgImgGrayMat = cvarrToMat(bgImgGray.getCvImage());
+//            cv::FAST(bgImgGrayMat, keyPointsNextBgImgGray,30,true);
+//            cv::KeyPoint::convert(keyPointsNextBgImgGray, points_nextPoints);
+//            once = false;
+//        }else{
+//            if(!orbTracker.getBoundariesKeyPoints().empty() && state==1){
+//                points_keyPoints = orbTracker.getBoundariesKeyPoints();
+//                
+//                state = 2;
+//            }
+//        }
+//        
+//        //variables
+//        cv::TermCriteria termcrit(CV_TERMCRIT_ITER|CV_TERMCRIT_EPS,20,0.03);
+//        cv::vector<uchar> status;
+//        cv::vector<float> err;
+//        cv::Size winSize(20,20);
+//        
+//        //if we get 4 keypoints of boundaries, use optic flow to track points.
+//        if(orbTracker.getBoundariesKeyPoints().size()>=4){
+//            //track points using opticalFlowLK
+//            cv::calcOpticalFlowPyrLK(bgImgGrayMat,currentImgGrayMat,points_keyPoints,points_nextPoints,status, err, winSize, 3, termcrit, 0);
+//            
+//            bgImgGray = currentImgGray;
+//            bgImgGrayMat = currentImgGrayMat;
+//            points_keyPoints = points_nextPoints;
+//        }
+//        
+//        
+//    }
+//    
+//    
+//}
 
 
 
@@ -171,43 +236,53 @@ void arApp::update(){
 //--------------------------------------------------------------
 void arApp::draw(){
     
-    
-    
+    //iphone se size 1136 x 640
+    //      img size 640 x 480
     ofSetColor(255);
-    currentImgColor.draw(0,0);
-    ofSetColor(0xffffff);
-    //    int pointCount = points_nextPoints.size();
-    //    for( int i=0; i < points_nextPoints.size(); i++ ) {
-    //        ofNoFill();
-    //        ofSetHexColor(0xFF0000);
-    //
-    //        ofDrawSphere(points_nextPoints[i].x,points_nextPoints[i].y,2);
-    //    }
+    vidGrabber.draw(0,0);
+    
+    //    orbTracker.draw();
+    //draw op
+    opticalFlow.drawHomography();
     
     
     
-    int pointCount = points_nextPoints.size();
-    ofDrawBitmapString("pointCount: " + ofToString(pointCount),20,20);
     
-    ofBeginShape();
-    ofSetColor(0,255,0);
-    ofSetLineWidth(5);
-    for( int i=0; i < points_nextPoints.size(); i++ ) {
-        ofVertex(points_nextPoints[i].x,points_nextPoints[i].y);
-        ofDrawBitmapString(i, points_nextPoints[i].x,points_nextPoints[i].y);
-        
-        //        cntrX = (imgBoundariesTransformed[0].x+imgBoundariesTransformed[2].x)/2;
-        //        cntrY = (imgBoundariesTransformed[0].y+imgBoundariesTransformed[2].y)/2;
-        //        scale = ofDist(imgBoundariesTransformed[0].x, imgBoundariesTransformed[0].y, imgBoundariesTransformed[2].x, imgBoundariesTransformed[2].y);
-        
-    }
-    if(points_nextPoints.size() > 0){
-        ofVertex(points_nextPoints[0].x, points_nextPoints[0].y);
-    }
-    
-    ofEndShape();
-    
-    
+//    ofSetColor(255);
+//    currentImgColor.draw(0,0);
+//    ofSetColor(0xffffff);
+//    //    int pointCount = points_nextPoints.size();
+//    //    for( int i=0; i < points_nextPoints.size(); i++ ) {
+//    //        ofNoFill();
+//    //        ofSetHexColor(0xFF0000);
+//    //
+//    //        ofDrawSphere(points_nextPoints[i].x,points_nextPoints[i].y,2);
+//    //    }
+//    
+//    
+//    
+//    int pointCount = points_nextPoints.size();
+//    ofDrawBitmapString("pointCount: " + ofToString(pointCount),20,20);
+//    
+//    ofBeginShape();
+//    ofSetColor(0,255,0);
+//    ofSetLineWidth(5);
+//    for( int i=0; i < points_nextPoints.size(); i++ ) {
+//        ofVertex(points_nextPoints[i].x,points_nextPoints[i].y);
+//        ofDrawBitmapString(i, points_nextPoints[i].x,points_nextPoints[i].y);
+//        
+//        //        cntrX = (imgBoundariesTransformed[0].x+imgBoundariesTransformed[2].x)/2;
+//        //        cntrY = (imgBoundariesTransformed[0].y+imgBoundariesTransformed[2].y)/2;
+//        //        scale = ofDist(imgBoundariesTransformed[0].x, imgBoundariesTransformed[0].y, imgBoundariesTransformed[2].x, imgBoundariesTransformed[2].y);
+//        
+//    }
+//    if(points_nextPoints.size() > 0){
+//        ofVertex(points_nextPoints[0].x, points_nextPoints[0].y);
+//    }
+//    
+//    ofEndShape();
+//    
+//    
     
 
     
@@ -226,19 +301,21 @@ void arApp::exit(){
 
 //--------------------------------------------------------------
 void arApp::touchDown(ofTouchEventArgs & touch){
-    bDetect =true;
+//    bDetect =true;
 
 }
 
 //--------------------------------------------------------------
 void arApp::touchMoved(ofTouchEventArgs & touch){
-    ofBackground(0,0,0);
+//    ofBackground(0,0,0);
     
 }
 
 //--------------------------------------------------------------
 void arApp::touchUp(ofTouchEventArgs & touch){
-    bDetect =false;
+    orbMagic =!orbMagic;
+//    bDetect =false;
+//    state = 1;
 
 
 }

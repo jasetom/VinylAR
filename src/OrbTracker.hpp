@@ -41,6 +41,8 @@ public:
     
     // detect features in the upcomming stream of video pixels
     void detect(unsigned char * pix, int inputWidth, int inputHeight);
+    void detect(Mat grayScaleVideo);
+
     
     // match current scene with analysed images
     int match(Mat descriptors,int stage);
