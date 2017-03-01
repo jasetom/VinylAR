@@ -43,7 +43,7 @@ public:
     void detect(unsigned char * pix, int inputWidth, int inputHeight);
     
     // match current scene with analysed images
-    int match(vector<KeyPoint> keyPoints, Mat descriptors, vector <Point2f> bounds);
+    int match(Mat descriptors,int stage);
     
     // calculate the perspective transform and apply to bounds polygon
     void createHomography(vector<KeyPoint> keyPoints, vector <Point2f> bounds);
@@ -66,6 +66,11 @@ public:
     vector <KeyPoint> getImgKeyPoints();
     vector <Point2f> getImgBoundaries();
     Mat getImgDescriptors();
+    
+    //optical flow implementation
+    vector <KeyPoint> getCameraKeyPoints();
+    vector <Point2f> getGoodMatchesAsKeyPoints();
+    vector <Point2f> getBoundariesKeyPoints();
 
     
     
@@ -91,19 +96,8 @@ private:
     Mat homography;								// prespective transform between original and new features
     vector <Point2f> imgBoundariesTransformed;	// perspective transformed bounds
     
-    //old implementation
-    //    SurfFeatureDetector detector;
-    //    SurfDescriptorExtractor extractor;
-    //    FlannBasedMatcher flannMatcher;             //"Fast Library for Approximate Nearest Neighbors"
-    //
-    //    SurfFeatureDetector analyseDetector;
-    //    SurfDescriptorExtractor analyseExtractor;
-    
-    
-    //new implementation
     OrbFeatureDetector detector;
     OrbDescriptorExtractor extractor;
-    //    FREAK extractor;
 
     int nFeatures;
     
@@ -111,7 +105,8 @@ private:
     
     vector<DMatch> goodMatches;				// matches between original and new descriptors
 
-    
+    //optical flow implementation
+    vector<Point2f> goodMatchesAsKeyPoints;
     
     
 };

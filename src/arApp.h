@@ -10,6 +10,7 @@
 #include "AVFoundationVideoGrabber.h"
 #include "ofxSURFTracker.h"
 #include "OrbTracker.hpp"
+#include "OpticalFlowTracker.hpp"
 
 
 class arApp : public ofxiOSApp {
@@ -31,21 +32,51 @@ class arApp : public ofxiOSApp {
         void gotMemoryWarning();
         void deviceOrientationChanged(int newOrientation);
     
-        //video recording/displaying
-        ofFpsCounter fps;
-        ofPixels tempPix;
-        AVFoundationVideoGrabber vidGrabber;
-        ofImage videoImg;
-        int counter; //counter
+    ////Old Orb Tracker implementation
 
+//        //video recording/displaying
+//        ofFpsCounter fps;
+//        ofPixels tempPix;
+//        AVFoundationVideoGrabber vidGrabber;
+//        ofImage videoImg;
+//        int counter; //counter
+//
+//    
+//        //tracking
+//        OrbTracker orbTracker;
+//        ofImage markerImg;
+//
+//        bool bDetect;
+//        bool bCreateHomography;
+    ////
     
-        //tracking
-        OrbTracker orbTracker;
-//        ofxSURFTracker surfTracker;
-        ofImage markerImg;
-
-        bool bDetect;
-        bool bCreateHomography;
+    //OpticalFlowTracker opTracker;
+    
+    ofVideoGrabber vidGrabber;
+    ofImage videoImg;
+    int counter; //counter
+    
+    
+    //tracking
+    OrbTracker orbTracker;
+    ofImage markerImg;
+    
+    bool bDetect;
+    bool bCreateHomography;
+    
+    //optical flow thing
+    ofxCvGrayscaleImage pastImgGray;
+    ofxCvGrayscaleImage bgImgGray;
+    ofxCvGrayscaleImage currentImgGray;
+    ofxCvColorImage		currentImgColor;
+    
+    vector<cv::Point2f> points_keyPoints;
+    vector<cv::Point2f> points_nextPoints;
+    
+    bool once;
+    Mat bgImgGrayMat;
+    int state;
+    
 
 
 };

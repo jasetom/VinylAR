@@ -222,52 +222,55 @@ void OrbTracker::createBoundaries(){
 
 
 //-----------------------------------------------------
-int OrbTracker::match(vector<KeyPoint> keyPoints, Mat descriptors, vector <Point2f> bounds){
+int OrbTracker::match(Mat descriptors, int stage){
     // this function tries to match keypoints and descriptors with the current scene
     // if there is no match, it returns 0,
     // if there is a match, it returns the number of matches and saves the perspective transform and bounding box
     
-    //    cout << "inside match!" << endl;
     
-    //    Mat& mask
-    // Matching descriptor vectors using FLANN matcher
-    //	vector< DMatch > matches;
-    vector< vector< DMatch > > matches;
-    if(!descriptors.empty() && !cameraDescriptors.empty() ){
-        matcher.knnMatch(descriptors,cameraDescriptors,matches,20);
-        //        flannMatcher.knnMatch(descriptors, descriptors_Scene, matches, 20);
-        //        knnMatch( const Mat& queryDescriptors, const Mat& trainDescriptors,
-        //                 CV_OUT vector<vector<DMatch> >& matches, int k,
-        //                 const Mat& mask=Mat(), bool compactResult=false ) const;
-    }
-    goodMatches.clear();
-    //    for (int i = 0; i < matches.size(); ++i){
-    //        const float ratio = 0.8; // As in Lowe's paper; can be tuned
-    //        if (matches[i][0].distance < ratio * matches[i][1].distance){
-    //            good_Matches.push_back(matches[i][0]);
-    //
-    //        }
-    //    }
-    
-    
-    float ratio = 0.8;
-    //    vector<vector<DMatch>> matches;
-    for(int i=0; i<matches.size(); i++) {
-        if((matches[i].size()==1)||(matches[i][0].distance/matches[i][1].distance<ratio)) { goodMatches.push_back(matches[i][0]);
+    if(stage==1){
+        // Matching descriptor vectors using knn BF matcher
+        vector< vector< DMatch > > matches;
+        if(!descriptors.empty() && !cameraDescriptors.empty() ){
+            matcher.knnMatch(descriptors,cameraDescriptors,matches,200);
+            
+            //        flannMatcher.knnMatch(descriptors, descriptors_Scene, matches, 20);
+            //        knnMatch( const Mat& queryDescriptors, const Mat& trainDescriptors,
+            //                 CV_OUT vector<vector<DMatch> >& matches, int k,
+            //                 const Mat& mask=Mat(), bool compactResult=false ) const;
         }
-    }
-    
-
+        goodMatches.clear();
+        //    for (int i = 0; i < matches.size(); ++i){
+        //        const float ratio = 0.8; // As in Lowe's paper; can be tuned
+        //        if (matches[i][0].distance < ratio * matches[i][1].distance){
+        //            good_Matches.push_back(matches[i][0]);
+        //
+        //        }
+        //    }
+        
+        
+        float ratio = 0.5;
+        for(int i=0; i<matches.size(); i++) {
+            if((matches[i].size()==1)||(matches[i][0].distance/matches[i][1].distance<ratio)){
+                goodMatches.push_back(matches[i][0]);
+            }
+        }
+        
+        
         if(goodMatches.size() > minMatches){
-        // being here means we have found a decent match
-        return goodMatches.size();
-    }else{
-        return 0;
+            // being here means we have found a decent match
+            return goodMatches.size();
+        }else{
+            return 0;
+        }
+        
+    }else if(stage==2){
+        //do nothing
     }
-    
     
     
 }
+
 
 //-----------------------------------------------------
 void OrbTracker::createHomography(vector<KeyPoint> keyPoints, vector <Point2f> boundaries){
@@ -420,6 +423,35 @@ vector <Point2f> OrbTracker::getImgBoundaries(){
 //-----------------------------------------------------
 Mat OrbTracker::getImgDescriptors(){
     return imgDescriptors;
+}
+//-----------------------------------------------------
+//implementing optical flow
+vector <KeyPoint> OrbTracker::getCameraKeyPoints(){
+    return cameraKeyPoints;
+}
+//-----------------------------------------------------
+
+vector <Point2f> OrbTracker::getGoodMatchesAsKeyPoints(){
+    
+    if(!goodMatches.empty()){
+        for(int i = 0; i < goodMatches.size();i++){
+            Point2f keyPoint = cameraKeyPoints[goodMatches[i].queryIdx].pt;
+            //            //            Point2f keyPoint = cameraKeyPoints[goodMatches[i].queryIdx].pt;
+            goodMatchesAsKeyPoints.push_back(keyPoint);
+            
+        }
+        return goodMatchesAsKeyPoints;
+    }else{
+        //return empty
+        return goodMatchesAsKeyPoints;
+    }
+    
+    
+}
+
+vector <Point2f> OrbTracker::getBoundariesKeyPoints(){
+    return imgBoundariesTransformed;
+    
 }
 
 
