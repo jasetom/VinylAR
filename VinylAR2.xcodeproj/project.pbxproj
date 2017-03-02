@@ -15,7 +15,6 @@
 		288765FD0DF74451002DB57D /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 288765FC0DF74451002DB57D /* CoreGraphics.framework */; };
 		5326AEA810A23A0500278DE6 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5326AEA710A23A0500278DE6 /* CoreLocation.framework */; };
 		53F323EB10A20EDB00E0DAE4 /* OpenAL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 53F323EA10A20EDB00E0DAE4 /* OpenAL.framework */; };
-		542239F51F9B8B6D121488B8 /* ofxSURFTracker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C5698BD67252CC957303F4E9 /* ofxSURFTracker.cpp */; };
 		63020F16C7E8DED980111241 /* ofxCvImage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C6151136D101F857DAE12722 /* ofxCvImage.cpp */; };
 		678E130817951530005B6D19 /* Icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 678E130717951530005B6D19 /* Icon@2x.png */; };
 		678E130A17951536005B6D19 /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 678E130917951536005B6D19 /* Icon.png */; };
@@ -32,6 +31,15 @@
 		E2C87DDA1E49E79F003035BB /* MyAppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = E2C87DCF1E49E79F003035BB /* MyAppDelegate.mm */; };
 		E2C87DDB1E49E79F003035BB /* MyAppViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = E2C87DD11E49E79F003035BB /* MyAppViewController.mm */; };
 		E2E98CC11E66EF1A00522005 /* OpticalFlowTracker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E2E98CBF1E66EF1A00522005 /* OpticalFlowTracker.cpp */; };
+		E2E98CDC1E688D5900522005 /* install.xml in Resources */ = {isa = PBXBuildFile; fileRef = E2E98CC71E688D5900522005 /* install.xml */; };
+		E2E98CDD1E688D5900522005 /* fft.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E2E98CC91E688D5900522005 /* fft.cpp */; };
+		E2E98CDE1E688D5900522005 /* maxiAtoms.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E2E98CCB1E688D5900522005 /* maxiAtoms.cpp */; };
+		E2E98CDF1E688D5900522005 /* maxiBark.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E2E98CCD1E688D5900522005 /* maxiBark.cpp */; };
+		E2E98CE01E688D5900522005 /* maxiFFT.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E2E98CCF1E688D5900522005 /* maxiFFT.cpp */; };
+		E2E98CE11E688D5900522005 /* maxiGrains.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E2E98CD11E688D5900522005 /* maxiGrains.cpp */; };
+		E2E98CE21E688D5900522005 /* maxiMFCC.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E2E98CD31E688D5900522005 /* maxiMFCC.cpp */; };
+		E2E98CE31E688D5900522005 /* maximilian.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E2E98CD51E688D5900522005 /* maximilian.cpp */; };
+		E2E98CE41E688D5900522005 /* stb_vorbis.c in Sources */ = {isa = PBXBuildFile; fileRef = E2E98CD81E688D5900522005 /* stb_vorbis.c */; };
 		E41D400B13B39D2100A75A5D /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E41D400613B39D2100A75A5D /* AVFoundation.framework */; };
 		E41D400C13B39D2100A75A5D /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E41D400713B39D2100A75A5D /* CoreMedia.framework */; };
 		E41D400D13B39D2100A75A5D /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E41D400813B39D2100A75A5D /* CoreVideo.framework */; };
@@ -170,7 +178,6 @@
 		9B90B3EE60497170AA00BFE8 /* types_c.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = types_c.h; path = ../../../addons/ofxOpenCv/libs/opencv/include/opencv2/imgproc/types_c.h; sourceTree = SOURCE_ROOT; };
 		9DA0CBD43DA38386EB04C9AE /* miniflann.hpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = miniflann.hpp; path = ../../../addons/ofxOpenCv/libs/opencv/include/opencv2/flann/miniflann.hpp; sourceTree = SOURCE_ROOT; };
 		9FF9126184DFBDE8A912373E /* highgui.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = highgui.h; path = ../../../addons/ofxOpenCv/libs/opencv/include/opencv/highgui.h; sourceTree = SOURCE_ROOT; };
-		A024E80DC183F18BBFF025FC /* ofxSURFTracker.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = ofxSURFTracker.h; path = ../../../addons/ofxSURFTracker/src/ofxSURFTracker.h; sourceTree = SOURCE_ROOT; };
 		A0399084868E7CAFB7E3D8E9 /* retina.hpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = retina.hpp; path = ../../../addons/ofxOpenCv/libs/opencv/include/opencv2/contrib/retina.hpp; sourceTree = SOURCE_ROOT; };
 		A15E0125B8C9B7F01DED5695 /* matrix.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = matrix.h; path = ../../../addons/ofxOpenCv/libs/opencv/include/opencv2/flann/matrix.h; sourceTree = SOURCE_ROOT; };
 		A1E5C3C977BF213B183ABC28 /* block.hpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = block.hpp; path = ../../../addons/ofxOpenCv/libs/opencv/include/opencv2/gpu/device/block.hpp; sourceTree = SOURCE_ROOT; };
@@ -200,7 +207,6 @@
 		C362FD421E9C5E4962E410EB /* dynamic_smem.hpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = dynamic_smem.hpp; path = ../../../addons/ofxOpenCv/libs/opencv/include/opencv2/gpu/device/dynamic_smem.hpp; sourceTree = SOURCE_ROOT; };
 		C4BA8097B54C90163F99F5C1 /* transform_detail.hpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = transform_detail.hpp; path = ../../../addons/ofxOpenCv/libs/opencv/include/opencv2/gpu/device/detail/transform_detail.hpp; sourceTree = SOURCE_ROOT; };
 		C4FB85020773DA0F09B8B6CE /* ts_gtest.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = ts_gtest.h; path = ../../../addons/ofxOpenCv/libs/opencv/include/opencv2/ts/ts_gtest.h; sourceTree = SOURCE_ROOT; };
-		C5698BD67252CC957303F4E9 /* ofxSURFTracker.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = ofxSURFTracker.cpp; path = ../../../addons/ofxSURFTracker/src/ofxSURFTracker.cpp; sourceTree = SOURCE_ROOT; };
 		C6151136D101F857DAE12722 /* ofxCvImage.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = ofxCvImage.cpp; path = ../../../addons/ofxOpenCv/src/ofxCvImage.cpp; sourceTree = SOURCE_ROOT; };
 		C61D3DACE506E4A1C3A6D782 /* highgui.hpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = highgui.hpp; path = ../../../addons/ofxOpenCv/libs/opencv/include/opencv2/highgui/highgui.hpp; sourceTree = SOURCE_ROOT; };
 		C65A89034372885C3F7259F5 /* superres.hpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = superres.hpp; path = ../../../addons/ofxOpenCv/libs/opencv/include/opencv2/superres/superres.hpp; sourceTree = SOURCE_ROOT; };
@@ -241,6 +247,25 @@
 		E2C87DD11E49E79F003035BB /* MyAppViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = MyAppViewController.mm; sourceTree = "<group>"; };
 		E2E98CBF1E66EF1A00522005 /* OpticalFlowTracker.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = OpticalFlowTracker.cpp; sourceTree = "<group>"; };
 		E2E98CC01E66EF1A00522005 /* OpticalFlowTracker.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = OpticalFlowTracker.hpp; sourceTree = "<group>"; };
+		E2E98CC71E688D5900522005 /* install.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = install.xml; sourceTree = "<group>"; };
+		E2E98CC91E688D5900522005 /* fft.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = fft.cpp; sourceTree = "<group>"; };
+		E2E98CCA1E688D5900522005 /* fft.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = fft.h; sourceTree = "<group>"; };
+		E2E98CCB1E688D5900522005 /* maxiAtoms.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = maxiAtoms.cpp; sourceTree = "<group>"; };
+		E2E98CCC1E688D5900522005 /* maxiAtoms.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = maxiAtoms.h; sourceTree = "<group>"; };
+		E2E98CCD1E688D5900522005 /* maxiBark.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = maxiBark.cpp; sourceTree = "<group>"; };
+		E2E98CCE1E688D5900522005 /* maxiBark.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = maxiBark.h; sourceTree = "<group>"; };
+		E2E98CCF1E688D5900522005 /* maxiFFT.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = maxiFFT.cpp; sourceTree = "<group>"; };
+		E2E98CD01E688D5900522005 /* maxiFFT.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = maxiFFT.h; sourceTree = "<group>"; };
+		E2E98CD11E688D5900522005 /* maxiGrains.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = maxiGrains.cpp; sourceTree = "<group>"; };
+		E2E98CD21E688D5900522005 /* maxiGrains.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = maxiGrains.h; sourceTree = "<group>"; };
+		E2E98CD31E688D5900522005 /* maxiMFCC.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = maxiMFCC.cpp; sourceTree = "<group>"; };
+		E2E98CD41E688D5900522005 /* maxiMFCC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = maxiMFCC.h; sourceTree = "<group>"; };
+		E2E98CD51E688D5900522005 /* maximilian.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = maximilian.cpp; sourceTree = "<group>"; };
+		E2E98CD61E688D5900522005 /* maximilian.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = maximilian.h; sourceTree = "<group>"; };
+		E2E98CD71E688D5900522005 /* sineTable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sineTable.h; sourceTree = "<group>"; };
+		E2E98CD81E688D5900522005 /* stb_vorbis.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = stb_vorbis.c; sourceTree = "<group>"; };
+		E2E98CD91E688D5900522005 /* stb_vorbis.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = stb_vorbis.h; sourceTree = "<group>"; };
+		E2E98CDB1E688D5900522005 /* ofxMaxim.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxMaxim.h; sourceTree = "<group>"; };
 		E354468911BA093791076DD7 /* gpumat.hpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = gpumat.hpp; path = ../../../addons/ofxOpenCv/libs/opencv/include/opencv2/gpu/gpumat.hpp; sourceTree = SOURCE_ROOT; };
 		E41D3ED613B38FB500A75A5D /* Project.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Project.xcconfig; sourceTree = "<group>"; };
 		E41D3EE513B3906D00A75A5D /* CoreOF.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = CoreOF.xcconfig; path = ../../../libs/openFrameworksCompiled/project/ios/CoreOF.xcconfig; sourceTree = SOURCE_ROOT; };
@@ -368,14 +393,6 @@
 				1D6058910D05DD3D006BFB54 /* VinylAR2.app */,
 			);
 			name = Products;
-			sourceTree = "<group>";
-		};
-		1B1BEE38298F0478B355C174 /* ofxSURFTracker */ = {
-			isa = PBXGroup;
-			children = (
-				E2D783E124BC680931291AE8 /* src */,
-			);
-			name = ofxSURFTracker;
 			sourceTree = "<group>";
 		};
 		1E45F8C3CCFF6847BFF957AA /* flann */ = {
@@ -659,8 +676,8 @@
 		BB16F26B0F2B646B00518274 /* addons */ = {
 			isa = PBXGroup;
 			children = (
+				E2E98CC61E688D5900522005 /* ofxMaxim */,
 				A0B90D3B0ADB9C1716816714 /* ofxOpenCv */,
-				1B1BEE38298F0478B355C174 /* ofxSURFTracker */,
 			);
 			name = addons;
 			sourceTree = "<group>";
@@ -812,13 +829,47 @@
 			path = UI;
 			sourceTree = "<group>";
 		};
-		E2D783E124BC680931291AE8 /* src */ = {
+		E2E98CC61E688D5900522005 /* ofxMaxim */ = {
 			isa = PBXGroup;
 			children = (
-				C5698BD67252CC957303F4E9 /* ofxSURFTracker.cpp */,
-				A024E80DC183F18BBFF025FC /* ofxSURFTracker.h */,
+				E2E98CC71E688D5900522005 /* install.xml */,
+				E2E98CC81E688D5900522005 /* libs */,
+				E2E98CDA1E688D5900522005 /* src */,
 			);
-			name = src;
+			name = ofxMaxim;
+			path = ../../../addons/ofxMaxim;
+			sourceTree = "<group>";
+		};
+		E2E98CC81E688D5900522005 /* libs */ = {
+			isa = PBXGroup;
+			children = (
+				E2E98CC91E688D5900522005 /* fft.cpp */,
+				E2E98CCA1E688D5900522005 /* fft.h */,
+				E2E98CCB1E688D5900522005 /* maxiAtoms.cpp */,
+				E2E98CCC1E688D5900522005 /* maxiAtoms.h */,
+				E2E98CCD1E688D5900522005 /* maxiBark.cpp */,
+				E2E98CCE1E688D5900522005 /* maxiBark.h */,
+				E2E98CCF1E688D5900522005 /* maxiFFT.cpp */,
+				E2E98CD01E688D5900522005 /* maxiFFT.h */,
+				E2E98CD11E688D5900522005 /* maxiGrains.cpp */,
+				E2E98CD21E688D5900522005 /* maxiGrains.h */,
+				E2E98CD31E688D5900522005 /* maxiMFCC.cpp */,
+				E2E98CD41E688D5900522005 /* maxiMFCC.h */,
+				E2E98CD51E688D5900522005 /* maximilian.cpp */,
+				E2E98CD61E688D5900522005 /* maximilian.h */,
+				E2E98CD71E688D5900522005 /* sineTable.h */,
+				E2E98CD81E688D5900522005 /* stb_vorbis.c */,
+				E2E98CD91E688D5900522005 /* stb_vorbis.h */,
+			);
+			path = libs;
+			sourceTree = "<group>";
+		};
+		E2E98CDA1E688D5900522005 /* src */ = {
+			isa = PBXGroup;
+			children = (
+				E2E98CDB1E688D5900522005 /* ofxMaxim.h */,
+			);
+			path = src;
 			sourceTree = "<group>";
 		};
 		E41D40FE13B3A0D800A75A5D /* Products */ = {
@@ -940,6 +991,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				678E130817951530005B6D19 /* Icon@2x.png in Resources */,
+				E2E98CDC1E688D5900522005 /* install.xml in Resources */,
 				678E130A17951536005B6D19 /* Icon.png in Resources */,
 				678E130C1795153C005B6D19 /* Default.png in Resources */,
 			);
@@ -968,21 +1020,28 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E2E98CE21E688D5900522005 /* maxiMFCC.cpp in Sources */,
 				E29125AE1E560C5700950261 /* OrbTracker.cpp in Sources */,
 				E2C87DDB1E49E79F003035BB /* MyAppViewController.mm in Sources */,
 				E4D8936E11527B74007E1F53 /* main.mm in Sources */,
 				E4D8936F11527B74007E1F53 /* arApp.mm in Sources */,
 				E2C87DD91E49E79F003035BB /* arAppViewController.mm in Sources */,
 				250A95BA26587BE85DB0A353 /* ofxCvColorImage.cpp in Sources */,
+				E2E98CDF1E688D5900522005 /* maxiBark.cpp in Sources */,
 				1D5F3298C2FA073628012944 /* ofxCvContourFinder.cpp in Sources */,
+				E2E98CDE1E688D5900522005 /* maxiAtoms.cpp in Sources */,
 				169D3C72FDE6C5590A1616F5 /* ofxCvFloatImage.cpp in Sources */,
+				E2E98CE11E688D5900522005 /* maxiGrains.cpp in Sources */,
+				E2E98CE31E688D5900522005 /* maximilian.cpp in Sources */,
+				E2E98CE41E688D5900522005 /* stb_vorbis.c in Sources */,
+				E2E98CDD1E688D5900522005 /* fft.cpp in Sources */,
 				FB09C6B2A1DA0EA217240CB8 /* ofxCvGrayscaleImage.cpp in Sources */,
 				E2C87DDA1E49E79F003035BB /* MyAppDelegate.mm in Sources */,
 				E2E98CC11E66EF1A00522005 /* OpticalFlowTracker.cpp in Sources */,
 				E212C821D1064B92DD953A42 /* ofxCvHaarFinder.cpp in Sources */,
 				63020F16C7E8DED980111241 /* ofxCvImage.cpp in Sources */,
+				E2E98CE01E688D5900522005 /* maxiFFT.cpp in Sources */,
 				D3301F6A0B43BB293ED97C1D /* ofxCvShortImage.cpp in Sources */,
-				542239F51F9B8B6D121488B8 /* ofxSURFTracker.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

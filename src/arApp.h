@@ -10,6 +10,8 @@
 #include "AVFoundationVideoGrabber.h"
 #include "OrbTracker.hpp"
 #include "OpticalFlowTracker.hpp"
+#include "ofxMaxim.h"
+
 
 
 class arApp : public ofxiOSApp {
@@ -31,62 +33,36 @@ class arApp : public ofxiOSApp {
         void gotMemoryWarning();
         void deviceOrientationChanged(int newOrientation);
     
-    ////Old Orb Tracker implementation
-
-//        //video recording/displaying
-//        ofFpsCounter fps;
-//        ofPixels tempPix;
-//        AVFoundationVideoGrabber vidGrabber;
-//        ofImage videoImg;
-//        int counter; //counter
-//
-//    
-//        //tracking
-//        OrbTracker orbTracker;
-//        ofImage markerImg;
-//
-//        bool bDetect;
-//        bool bCreateHomography;
-    ////
-    
-//    //OpticalFlowTracker opTracker;
-//    
-//    ofVideoGrabber vidGrabber;
-//    ofImage videoImg;
-//    int counter; //counter
-//    
-//    
-//    //tracking
-//    OrbTracker orbTracker;
-//    ofImage markerImg;
-//    
-//    bool bDetect;
-//    bool bCreateHomography;
-//    
-//    //optical flow thing
-//    ofxCvGrayscaleImage pastImgGray;
-//    ofxCvGrayscaleImage bgImgGray;
-//    ofxCvGrayscaleImage currentImgGray;
-//    ofxCvColorImage		currentImgColor;
-//    
-//    vector<cv::Point2f> points_keyPoints;
-//    vector<cv::Point2f> points_nextPoints;
-//    
-//    bool once;
-//    Mat bgImgGrayMat;
-//    int state;
-    
+    /* Tracking */
     ofVideoGrabber vidGrabber;
     ofImage videoImg;
-    
     //ORBtracking
     OrbTracker orbTracker;
     ofImage markerImg;
     bool orbMagic;
-    
+    //OpticalFlowTracking
     OpticalFlowTracker opticalFlow;
     bool flow;
     int state;
+    
+    /* Sound stuff */
+    void audioOut(float * output, int bufferSize, int nChannels); //audio output function
+    int	initialBufferSize; //buffer size
+    
+    maxiSample samp, samp1,samp2,samp3; //maxi sample objects
+    int sampleRate; //sample rate variable
+    
+    double playingSound; //variable where we store data when sound is playing
+    bool playSound;
+    
+    float * lAudio; //left audio output
+    float * rAudio; //right audio output
+    
+    /* FFT stuff */
+    ofxMaxiFFT mfft;
+    int fftSize;
+    int bins, dataSize;
+
     
     
     

@@ -8,56 +8,12 @@
 //--------------------------------------------------------------
 void arApp::setup(){
     
-    /////Old OrbTracker implementation.
-//    //Set orientation to portait
-//    ofSetOrientation(OF_ORIENTATION_DEFAULT);
-//    ofSetVerticalSync(true);
-//    ofSetFrameRate(60);
-//    //innitiate video grabber
-//    vidGrabber.setDevice(0);
-//    
-//    vidGrabber.initGrabber(640,480);
-//    
-//    //load up tracker image and analyse it
-//    markerImg.load(ofToDataPath("images/marker1.jpg"));
-//    
-//    //analyse image to get its features
-//    orbTracker.analyseImage(markerImg);
-//    orbTracker.createBoundaries();
-//    ofSetFrameRate(30);
-    ////
-
+    CGSize ARViewBoundsSize = CGSizeZero;
+    UIInterfaceOrientation ARViewOrientation = UIInterfaceOrientationUnknown;
     
-    
-    //implementing opTracker down here
-//    opTracker.setup(vidGrabber.getWidth(), vidGrabber.getHeight());
-    
-    
-/////// smthg
-//    
-//    ofSetVerticalSync(true);
-//    ofSetFrameRate(60);
-//
-//    
-//    vidGrabber.initGrabber(640,480);
-//    
-//    //load up tracker image and analyse it
-//    markerImg.load(ofToDataPath("images/marker1.jpg"));
-//    
-//    //analyse image to get its features
-//    orbTracker.analyseImage(markerImg);
-//    orbTracker.createBoundaries();
-//
-//    counter=0;
-//    
-//    currentImgColor.allocate(vidGrabber.getWidth(), vidGrabber.getHeight());
-//    currentImgGray.allocate(vidGrabber.getWidth(), vidGrabber.getHeight());
-//    //    pastImgGray.allocate(vidGrabber.getWidth(), vidGrabber.getHeight());
-//    bgImgGray.allocate(vidGrabber.getWidth(), vidGrabber.getHeight());
-//    
-//    once = true;
-//    state = 1;
-//////
+    ARViewBoundsSize.width = [[UIScreen mainScreen] bounds].size.width;
+    ARViewBoundsSize.height = [[UIScreen mainScreen] bounds].size.height;
+    ARViewOrientation = UIInterfaceOrientationPortrait;
 
     //basic setup for programm
     vidGrabber.initGrabber(640,480);
@@ -74,31 +30,45 @@ void arApp::setup(){
     orbTracker.createBoundaries();
     
     ////OpticalFlowTracker
-    //setup
     opticalFlow.setup(640, 480);
     
-    state =0;
+    ////Sound setup
+    sampleRate 			= 44100; /* Sampling Rate */
+    initialBufferSize	= 512;	/* Buffer Size. you have to fill this buffer with sound*/
     
+    //left and right audio output sizes
+    lAudio = new float[initialBufferSize];
+    rAudio = new float[initialBufferSize];
     
+    //loading sample track
+    samp1.load(ofToDataPath("sounds/beat2.wav"));
+    samp2.load(ofToDataPath("sounds/beat3.wav"));
+    samp3.load(ofToDataPath("sounds/beat4.wav"));
     
+    samp = samp1;
     
+    //set up maxim
+    ofxMaxiSettings::setup(sampleRate, 2, initialBufferSize);
     
+    //setup fft
+    fftSize = 1024;
+    mfft.setup(fftSize, 512, 256);
     
-    
+    //this allows to mix audio from other apps
+    //    ofxiOSSoundStream::setMixWithOtherApps(true);
+    //this starts DAC using opeframeworks
+    ofSoundStreamSetup(2, 0, this, sampleRate, initialBufferSize, 4);
 
-
+    
 }
 
 //--------------------------------------------------------------
 void arApp::update(){
     
-    
     vidGrabber.update();
     if(vidGrabber.isFrameNew()){
         
-        
         //we tap screen and this all happens.
-        
         if(orbMagic==true){
             //if we dont have any boundaries yet, we run the detection function
             if(orbTracker.getBoundariesKeyPoints().size()<3){
@@ -118,117 +88,18 @@ void arApp::update(){
             opticalFlow.updateFlowImage(vidGrabber.getPixels().getData(),orbTracker.getBoundariesKeyPoints());
             //disabling detection/tracking/matching from orbTracker
             orbMagic = false;
-//            state = 1;
+            
         }
+    
     }
+    //check sound
+    if(flow){
+        playSound = true;
+    }else{
+        playSound = false;
+    }
+    
 }
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-//    vidGrabber.update();
-    
-    
-//    if(vidGrabber.isFrameNew()){
-//        
-//        currentImgColor.setFromPixels(vidGrabber.getPixels().getData(), vidGrabber.getWidth(), vidGrabber.getHeight());
-//        
-//        currentImgGray = currentImgColor;
-//        
-//        
-//        currentImgGray.blurGaussian(6);
-//        currentImgGray.threshold(75);
-//        currentImgGray.blurGaussian(1);
-//        
-//        std::vector<cv::KeyPoint> keyPointsCurrentImgGray;
-//        std::vector<cv::KeyPoint> keyPointsNextBgImgGray;
-//        
-//        //convert images to cv mats
-//        Mat currentImgGrayMat = cvarrToMat(currentImgGray.getCvImage());
-//        
-//        Mat bgImgGrayMat = cvarrToMat(bgImgGray.getCvImage());
-//        
-//        //now we detect and match using ORB class:
-//        orbTracker.detect(vidGrabber.getPixels().getData(),vidGrabber.getWidth(), vidGrabber.getHeight());
-////                orbTracker.detect(currentImgGrayMat);
-//
-//        
-//        //use matcher with state parameter and create homography when state is 1
-//        if(state ==1){
-//            orbTracker.match(orbTracker.getImgDescriptors(),state);
-//            orbTracker.createHomography(orbTracker.getImgKeyPoints(),orbTracker.getImgBoundaries());
-//        }
-//        
-//        //run this for the very first frame or if the keypoints are empty
-//        if(once==true||orbTracker.getBoundariesKeyPoints().empty()){
-//            keyPointsCurrentImgGray = orbTracker.getCameraKeyPoints();
-//            cv::KeyPoint::convert(keyPointsCurrentImgGray, points_keyPoints);
-//            
-//            bgImgGrayMat = cvarrToMat(bgImgGray.getCvImage());
-//            cv::FAST(bgImgGrayMat, keyPointsNextBgImgGray,30,true);
-//            cv::KeyPoint::convert(keyPointsNextBgImgGray, points_nextPoints);
-//            once = false;
-//        }else{
-//            if(!orbTracker.getBoundariesKeyPoints().empty() && state==1){
-//                points_keyPoints = orbTracker.getBoundariesKeyPoints();
-//                
-//                state = 2;
-//            }
-//        }
-//        
-//        //variables
-//        cv::TermCriteria termcrit(CV_TERMCRIT_ITER|CV_TERMCRIT_EPS,20,0.03);
-//        cv::vector<uchar> status;
-//        cv::vector<float> err;
-//        cv::Size winSize(20,20);
-//        
-//        //if we get 4 keypoints of boundaries, use optic flow to track points.
-//        if(orbTracker.getBoundariesKeyPoints().size()>=4){
-//            //track points using opticalFlowLK
-//            cv::calcOpticalFlowPyrLK(bgImgGrayMat,currentImgGrayMat,points_keyPoints,points_nextPoints,status, err, winSize, 3, termcrit, 0);
-//            
-//            bgImgGray = currentImgGray;
-//            bgImgGrayMat = currentImgGrayMat;
-//            points_keyPoints = points_nextPoints;
-//        }
-//        
-//        
-//    }
-//    
-//    
-//}
-
-
-
-
-    
-    
-    
-    /////Old OrbTracker implementation.
-////    //if the frame is new create new picture out of pixels
-//    vidGrabber.update();
-//    if(vidGrabber.isFrameNew()){
-////        //create new video image
-//        tempPix.setFromPixels(vidGrabber.getPixels(), vidGrabber.getWidth(), vidGrabber.getHeight(), vidGrabber.getPixelFormat());
-//        videoImg.setFromPixels(tempPix);
-//
-//        orbTracker.detect(vidGrabber.getPixels(),vidGrabber.getWidth(), vidGrabber.getHeight());
-//
-//        if(bDetect){
-//            if(orbTracker.match(orbTracker.getImgKeyPoints(),orbTracker.getImgDescriptors(),orbTracker.getImgBoundaries())>1){
-//               orbTracker.createHomography(orbTracker.getImgKeyPoints(),orbTracker.getImgBoundaries());
-//            }
-//        }
-//    }
-//}
-    ////
 
     
 
@@ -241,56 +112,34 @@ void arApp::draw(){
     ofSetColor(255);
     vidGrabber.draw(0,0);
     
-    //    orbTracker.draw();
     //draw op
     opticalFlow.drawHomography();
     
+    //draw sound
     
+    ofBeginShape();
     
-    
-//    ofSetColor(255);
-//    currentImgColor.draw(0,0);
-//    ofSetColor(0xffffff);
-//    //    int pointCount = points_nextPoints.size();
-//    //    for( int i=0; i < points_nextPoints.size(); i++ ) {
-//    //        ofNoFill();
-//    //        ofSetHexColor(0xFF0000);
-//    //
-//    //        ofDrawSphere(points_nextPoints[i].x,points_nextPoints[i].y,2);
-//    //    }
-//    
-//    
-//    
-//    int pointCount = points_nextPoints.size();
-//    ofDrawBitmapString("pointCount: " + ofToString(pointCount),20,20);
-//    
-//    ofBeginShape();
-//    ofSetColor(0,255,0);
-//    ofSetLineWidth(5);
-//    for( int i=0; i < points_nextPoints.size(); i++ ) {
-//        ofVertex(points_nextPoints[i].x,points_nextPoints[i].y);
-//        ofDrawBitmapString(i, points_nextPoints[i].x,points_nextPoints[i].y);
-//        
-//        //        cntrX = (imgBoundariesTransformed[0].x+imgBoundariesTransformed[2].x)/2;
-//        //        cntrY = (imgBoundariesTransformed[0].y+imgBoundariesTransformed[2].y)/2;
-//        //        scale = ofDist(imgBoundariesTransformed[0].x, imgBoundariesTransformed[0].y, imgBoundariesTransformed[2].x, imgBoundariesTransformed[2].y);
-//        
-//    }
-//    if(points_nextPoints.size() > 0){
-//        ofVertex(points_nextPoints[0].x, points_nextPoints[0].y);
-//    }
-//    
-//    ofEndShape();
-//    
-//    
-    
+    ofSetColor(255,133,133);
+    ofFill();
 
+    for(int i=0; i < fftSize / 8; i++) {
+        
+        ofSetColor(7*i,133,133);
+        //place spheres in a circle using trig functions
+        int x = cos(i)*100;
+        int y = sin(i)*100;
+        ofDrawSphere(x,y,150,5+mfft.magnitudes[i]*2);
+    }
     
+    ofSetColor(200);
+    ofDrawRectangle(-100,0,0,200,30);
+    ofSetColor(255,0,0);
+    ofDrawBitmapString("Artist - SoundTrackName", -100, 0,10);
+
+    ofEndShape();
     
-    /////Old OrbTracker implementation.
-//    videoImg.draw(0,0);
-//    orbTracker.draw();
-    ////
+   
+
     
 }
 
@@ -301,22 +150,17 @@ void arApp::exit(){
 
 //--------------------------------------------------------------
 void arApp::touchDown(ofTouchEventArgs & touch){
-//    bDetect =true;
 
 }
 
 //--------------------------------------------------------------
 void arApp::touchMoved(ofTouchEventArgs & touch){
-//    ofBackground(0,0,0);
     
 }
 
 //--------------------------------------------------------------
 void arApp::touchUp(ofTouchEventArgs & touch){
     orbMagic =!orbMagic;
-//    bDetect =false;
-//    state = 1;
-
 
 }
 
@@ -348,4 +192,29 @@ void arApp::gotMemoryWarning(){
 //--------------------------------------------------------------
 void arApp::deviceOrientationChanged(int newOrientation){
 
+}
+//--------------------------------------------------------------
+void arApp::audioOut(float * output, int bufferSize, int nChannels) {
+    //audio output
+    for (int i = 0; i < bufferSize; i++){
+        //check wheter to play sound. Plays only when the AR marker is detected.
+        if(playSound == true){
+            
+            //play sound
+            playingSound = samp.play();
+            
+            //process sound and convert magnitudes to decibels in the mfft.
+            if (mfft.process(playingSound)) {
+                mfft.magsToDB();
+            }
+            //volume
+            lAudio[i] = output[i * nChannels] = playingSound;// * 0.0;
+            rAudio[i] = output[i * nChannels + 1] = playingSound;//* 0.0;
+            
+        }else{
+            //if not playing set output to zero.
+            lAudio[i] = output[i * nChannels] = 0;
+            rAudio[i] = output[i * nChannels + 1] = 0;
+        }
+    }
 }

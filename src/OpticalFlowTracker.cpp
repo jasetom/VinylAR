@@ -22,7 +22,7 @@ void OpticalFlowTracker::setup(int cam_w, int cam_h){
     bgImgGray.allocate(cam_w, cam_h);
     //OpticalFlowPyrLK openCV function parameters
     termcrit = cvTermCriteria(CV_TERMCRIT_ITER|CV_TERMCRIT_EPS,20,0.03);
-    winSize = cvSize(100,100);
+    winSize = cvSize(20,20);
     maxLevel = 3;
     flag = 0;
     //boolean which specifies to run certain parts of the code only once.
@@ -41,7 +41,7 @@ void OpticalFlowTracker::updateFlowImage(unsigned char *pix, vector<cv::Point2f>
     currentImgGray = currentImgColor;
     //apply some effects, so it would be easier to track
     currentImgGray.blurGaussian(5);
-    currentImgGray.threshold(55);
+    currentImgGray.threshold(75);
     currentImgGray.blurGaussian(1);
     
     //convert image to cv mat
@@ -62,26 +62,25 @@ void OpticalFlowTracker::updateFlowImage(unsigned char *pix, vector<cv::Point2f>
 void OpticalFlowTracker::chooseFlowKeyPoints(vector<cv::Point2f> keyPointsToTrack){
     
     //check if the function is called for the first time or keyPoints are empty
-    if(once==true||keyPointsToTrack.empty()){
+    if(once==true){
         //if so, we use FAST image detector to get keypoints to get going with our program
         cv::FAST(currentImgGrayMat, keyPointsCurrentImgGray,30,true);
         //then we convert openCV Keypoints to openCV Vector points
         cv::KeyPoint::convert(keyPointsCurrentImgGray, points_keyPoints);
+        
         //we do the same with the previous image
-        bgImgGrayMat = cv::cvarrToMat(bgImgGray.getCvImage());
+        //bgImgGrayMat = cv::cvarrToMat(bgImgGray.getCvImage());
         cv::FAST(bgImgGrayMat, keyPointsNextBgImgGray,30,true);
         cv::KeyPoint::convert(keyPointsNextBgImgGray, points_nextPoints);
         //then we set keypoints to be the received keypoints
         points_keyPoints = keyPointsToTrack;
         //and use those points to track
-        trackFlowKeyPoints(points_keyPoints);
+       // trackFlowKeyPoints(points_keyPoints);
         once = false;
-        
-        //if keypoints are not empty
-    }else if(!keyPointsToTrack.empty()){
+    }
         //pass them to the function for tracking
         trackFlowKeyPoints(points_keyPoints);
-    }
+
     
 }
 
@@ -110,7 +109,7 @@ void OpticalFlowTracker::trackFlowKeyPoints(vector<cv::Point2f> keyPoints){
         cv::calcOpticalFlowPyrLK(bgImgGrayMat,currentImgGrayMat,points_keyPoints,points_nextPoints,status, err, winSize, maxLevel, termcrit, flag);
         //once we are done with tracking for this frame, set the current points, and images to be the previous and run the whole thing again.
         bgImgGray = currentImgGray;
-        bgImgGrayMat = currentImgGrayMat;
+//        bgImgGrayMat = currentImgGrayMat;
         points_keyPoints = points_nextPoints;
     }
 }
@@ -120,11 +119,15 @@ void OpticalFlowTracker::trackFlowKeyPoints(vector<cv::Point2f> keyPoints){
 void OpticalFlowTracker::drawHomography(){
     
     //    ofDrawBitmapString("pointCount: " + ofToString(points_nextPoints.size()),20,20);
-    
     if(!points_nextPoints.empty()){
+        
+//        currentImgGray.draw(0,0,inputWidth,inputHeight);
+
         ofBeginShape();
         ofSetColor(0,255,0);
         ofSetLineWidth(5);
+        ofNoFill();
+
         
         for( int i=0; i < points_nextPoints.size(); i++ ) {
             ofVertex(points_nextPoints[i].x,points_nextPoints[i].y);
