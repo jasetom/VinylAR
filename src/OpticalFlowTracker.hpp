@@ -22,8 +22,14 @@ public:
     void chooseFlowKeyPoints(vector<cv::Point2f> keyPointsToTrack);
     void trackFlowKeyPoints(vector<cv::Point2f> keyPointsToTrack);
     void drawHomography();
+    void calcMidPoint(vector<cv::Point2f> boundariesPoints);
     
+    bool trackingPointsVisible();
+    
+    //getters
+    ofVec2f getMiddlePoint();
     vector<cv::Point2f> getNextPoints();
+    float getDrawingScalar();
     
 private:
     //variables for calcOpticalFlowPyrLK function
@@ -52,6 +58,12 @@ private:
     int inputHeight;
     
     bool once;
+    
+    //middle point coordinates
+    int cntrX;
+    int cntrY;
+    float scale;
+    ofVec2f middlePoint;
     
 };
 

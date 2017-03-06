@@ -45,7 +45,7 @@ public:
 
     
     // match current scene with analysed images
-    int match(Mat descriptors,int stage);
+    int match(Mat descriptors);
     
     // calculate the perspective transform and apply to bounds polygon
     void createHomography(vector<KeyPoint> keyPoints, vector <Point2f> bounds);

@@ -30,7 +30,7 @@ void arApp::setup(){
     orbTracker.createBoundaries();
     
     ////OpticalFlowTracker
-    opticalFlow.setup(640, 480);
+    opticalFlow.setup(vidGrabber.getWidth(),vidGrabber.getHeight());
     
     ////Sound setup
     sampleRate 			= 44100; /* Sampling Rate */
@@ -56,6 +56,7 @@ void arApp::setup(){
     
     //this allows to mix audio from other apps
     //    ofxiOSSoundStream::setMixWithOtherApps(true);
+    
     //this starts DAC using opeframeworks
     ofSoundStreamSetup(2, 0, this, sampleRate, initialBufferSize, 4);
 
@@ -78,7 +79,7 @@ void arApp::update(){
                 flow = true;
             }
             //once detection has been run we match and create homography, which creates boundaries keypoints.
-            if(orbTracker.match(orbTracker.getImgDescriptors(),1)>1){
+            if(orbTracker.match(orbTracker.getImgDescriptors())>1){
                 orbTracker.createHomography(orbTracker.getImgKeyPoints(),orbTracker.getImgBoundaries());
             }
         }
@@ -89,13 +90,16 @@ void arApp::update(){
             //disabling detection/tracking/matching from orbTracker
             orbMagic = false;
             
+            
+            cout << opticalFlow.trackingPointsVisible() <<endl;
+            
         }
     
     }
     //check sound
     if(flow){
         playSound = true;
-    }else{
+    }else if(!flow){
         playSound = false;
     }
     
@@ -106,41 +110,56 @@ void arApp::update(){
 
 //--------------------------------------------------------------
 void arApp::draw(){
+
+    //iphone se size 568 x 320
+    //camera img size 640 x 480
+    //therefore we center it out using translate
+    ofTranslate(-80,-36);
     
-    //iphone se size 1136 x 640
-    //      img size 640 x 480
     ofSetColor(255);
     vidGrabber.draw(0,0);
+    
+    ofSetColor(0);
+    ofDrawBitmapString(ofGetWidth(), 20, 20);
+    ofDrawBitmapString(ofGetHeight(), 20, 40);
     
     //draw op
     opticalFlow.drawHomography();
     
-    //draw sound
-    
-    ofBeginShape();
-    
-    ofSetColor(255,133,133);
-    ofFill();
-
-    for(int i=0; i < fftSize / 8; i++) {
-        
-        ofSetColor(7*i,133,133);
-        //place spheres in a circle using trig functions
-        int x = cos(i)*100;
-        int y = sin(i)*100;
-        ofDrawSphere(x,y,150,5+mfft.magnitudes[i]*2);
+    if(orbMagic){
+        ofSetColor(255,200,0);
+        ofSetLineWidth(7);
+        ofNoFill();
+        ofDrawRectangle(80,36,ofGetWidth(),ofGetHeight());
     }
-    
-    ofSetColor(200);
-    ofDrawRectangle(-100,0,0,200,30);
-    ofSetColor(255,0,0);
-    ofDrawBitmapString("Artist - SoundTrackName", -100, 0,10);
-
-    ofEndShape();
-    
+        
+    //here we would draw sound
+    if(flow){
+        
+        ofSetColor(255,0,0);
+        ofDrawSphere(opticalFlow.getMiddlePoint().x,opticalFlow.getMiddlePoint().y,10,opticalFlow.getDrawingScalar());
+        
+        if(opticalFlow.trackingPointsVisible()){
+            ofSetColor(255);
+            ofSetLineWidth(7);
+            ofNoFill();
+            ofDrawRectangle(80,36,ofGetWidth(),ofGetHeight());
+        }
+//        ofBeginShape();
+//        ofSetColor(255,133,133);
+//        ofFill();
+//        
+//        for(int i=0; i < fftSize / 8; i++) {
+//        
+//            ofSetColor(7*i,133,133);
+//            //place spheres in a circle using trig functions
+//            int x = cos(i)*100;
+//            int y = sin(i)*100;
+//            ofDrawSphere(x,y,150,5+mfft.magnitudes[i]*2);
+//        }
+//        ofEndShape();
+    }
    
-
-    
 }
 
 //--------------------------------------------------------------
