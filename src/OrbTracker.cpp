@@ -250,39 +250,61 @@ int OrbTracker::match(){
             
             if((matches[i].size()==1)||(matches[i][0].distance/matches[i][1].distance<ratio)){
                 goodMatches.push_back(matches[i][0]);
-                
-               // cout << "matches imgIdx: " << matches[i][i].imgIdx <<endl;
-
-                
-                //we store the number of image matched in this variable for later use
-                detectedImgNumber = goodMatches[0].imgIdx;
             }
         }
-    
-//    cout << "matches size: " << matches.size() <<endl;
-//    cout << "goodmatches size: " << goodMatches.size() <<endl;
-//    
-//    
-    
-//    if(detectedImgNumber==0){
-//        cout << "wood" <<endl;
-//    }
-//    if(detectedImgNumber==1){
-//        cout << "pebbles" <<endl;
-//    }
-//    if(detectedImgNumber==2){
-//        cout << "road" <<endl;
-//    }
+
 
     
         if(goodMatches.size() > minMatches){
             // being here means we have found a decent match
+            detectedImgNumber = goodMatches[minMatches].imgIdx;
             return goodMatches.size();
         }else{
             return 0;
         }
 
 }
+
+Mat OrbTracker::getImgDescriptors(int n){
+    return manyImgDescriptors[n];
+}
+
+
+
+int OrbTracker::match2(){
+    
+    
+    // Matching descriptor vectors using knn BF matcher
+    vector< vector< DMatch > > matches;
+    if(!cameraDescriptors.empty() ){
+
+        //        matcher.knnMatch(cameraDescriptors, matches, 200);
+        
+        matcher.knnMatch(getImgDescriptors(detectedImgNumber),cameraDescriptors, matches, 200);
+
+    }
+    
+    goodMatches.clear();
+    
+    float ratio = 0.5;
+    for(int i=0; i<matches.size(); i++){
+        if((matches[i].size()==1)||(matches[i][0].distance/matches[i][1].distance<ratio)){
+            goodMatches.push_back(matches[i][0]);
+        }
+    }
+
+    if(goodMatches.size() > minMatches){
+        // being here means we have found a decent match
+        return goodMatches.size();
+    }else{
+        return 0;
+    }
+
+
+}
+
+
+
 
 //-----------------------------------------------------
 void OrbTracker::createHomography(vector<KeyPoint> keyPoints, vector <Point2f> boundaries){

@@ -22,14 +22,14 @@ void arApp::setup(){
     
     
     
-//    ////OrbTracker 0 wood
-//    //load up tracker image and analyse it
-//    markerImg.load(ofToDataPath("images/3.jpg"));
-//    markerImg.resize(markerImg.getWidth()/2,markerImg.getHeight()/2);
-//    //analyse image to get its features
-//    orbTracker.analyseImage(markerImg);
-//    //create boundaries for the analysed image
-//    orbTracker.createBoundaries();
+    ////OrbTracker 0 wood
+    //load up tracker image and analyse it
+    markerImg.load(ofToDataPath("images/3.jpg"));
+    markerImg.resize(markerImg.getWidth()/2,markerImg.getHeight()/2);
+    //analyse image to get its features
+    orbTracker.analyseImage(markerImg);
+    //create boundaries for the analysed image
+    orbTracker.createBoundaries();
 
 
     ////OrbTracker 1 pebbles
@@ -42,14 +42,14 @@ void arApp::setup(){
     orbTracker.createBoundaries();
 
     
-//    ////OrbTracker 2 road
-//    //load up tracker image and analyse it
-//    markerImg.load(ofToDataPath("images/2.jpg"));
-//    markerImg.resize(markerImg.getWidth()/2,markerImg.getHeight()/2);
-//    //analyse image to get its features
-//    orbTracker.analyseImage(markerImg);
-//    //create boundaries for the analysed image
-//    orbTracker.createBoundaries();
+    ////OrbTracker 2 road
+    //load up tracker image and analyse it
+    markerImg.load(ofToDataPath("images/2.jpg"));
+    markerImg.resize(markerImg.getWidth()/2,markerImg.getHeight()/2);
+    //analyse image to get its features
+    orbTracker.analyseImage(markerImg);
+    //create boundaries for the analysed image
+    orbTracker.createBoundaries();
     
     //once we analyse all of the images we train our matcher with descriptors
     orbTracker.trainMatches(orbTracker.getManyImgDescriptors());
@@ -106,8 +106,9 @@ void arApp::update(){
             }
             
             if(orbTracker.match()>1){
-            orbTracker.createHomography(orbTracker.getImgKeyPoints(orbTracker.getDetectedImgNumber()),orbTracker.getImgBoundaries(orbTracker.getDetectedImgNumber()));
-
+                if(orbTracker.match2()>1){
+                    orbTracker.createHomography(orbTracker.getImgKeyPoints(orbTracker.getDetectedImgNumber()),orbTracker.getImgBoundaries(orbTracker.getDetectedImgNumber()));
+                };
             };
         }
         

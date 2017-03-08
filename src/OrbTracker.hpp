@@ -69,6 +69,8 @@ public:
     vector <Point2f> getImgBoundaries(int n);
     Mat getImgDescriptors();
     
+    Mat getImgDescriptors(int n);
+    
     //optical flow implementation
     vector <KeyPoint> getCameraKeyPoints();
     vector <Point2f> getGoodMatchesAsKeyPoints();
@@ -78,6 +80,10 @@ public:
     void trainMatches(vector <cv::Mat> manyDescriptors);
     int getDetectedImgNumber();
     void reset();
+    
+    int match2();
+    
+    
     
     
 private:
