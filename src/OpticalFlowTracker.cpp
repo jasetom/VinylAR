@@ -33,7 +33,7 @@ void OpticalFlowTracker::setup(int cam_w, int cam_h){
 //-----------------------------------------------------
 // This function creates and prepares grayscale image from camera pixels, which would be later on used to track keypoints
 
-void OpticalFlowTracker::updateFlowImage(unsigned char* pix, vector<cv::Point2f> keyPointsToTrack){
+void OpticalFlowTracker::updateFlowImage(unsigned char* pix, vector<cv::Point2f> keyPointsToTrack, bool once){
 
     //we create image out of pixels comming from the camera
     currentImgColor.setFromPixels(pix, inputWidth, inputHeight);
@@ -49,7 +49,7 @@ void OpticalFlowTracker::updateFlowImage(unsigned char* pix, vector<cv::Point2f>
     bgImgGrayMat = cv::cvarrToMat(bgImgGray.getCvImage());
     
     //when we are done with preparations, pass along keypoints to another function
-    chooseFlowKeyPoints(keyPointsToTrack);
+    chooseFlowKeyPoints(keyPointsToTrack,once);
     
 //    [ error ] ofxCvGrayscaleImage: operator=: region of interest mismatch
 //    [ error ] ofTessellator: performTessellation(): mesh polygon tessellation failed, winding mode 0
@@ -62,7 +62,7 @@ void OpticalFlowTracker::updateFlowImage(unsigned char* pix, vector<cv::Point2f>
 // use cv::FAST extractor to get keyPoints from image. But once we've got keyPointsToTrack passed from the function
 //before, we would use those instead and pass them onto another function.
 
-void OpticalFlowTracker::chooseFlowKeyPoints(vector<cv::Point2f> keyPointsToTrack){
+void OpticalFlowTracker::chooseFlowKeyPoints(vector<cv::Point2f> keyPointsToTrack,bool once){
     
     //check if the function is called for the first time or keyPoints are empty
     if(once==true){

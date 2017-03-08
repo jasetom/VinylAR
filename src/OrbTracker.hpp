@@ -45,7 +45,7 @@ public:
 
     
     // match current scene with analysed images
-    int match(Mat descriptors);
+    int match();
     
     // calculate the perspective transform and apply to bounds polygon
     void createHomography(vector<KeyPoint> keyPoints, vector <Point2f> bounds);
@@ -65,8 +65,8 @@ public:
     /*              Getters and setters         */
     // get the number of approved matches, a measure for the quality
     int getGoodMatchesSize();
-    vector <KeyPoint> getImgKeyPoints();
-    vector <Point2f> getImgBoundaries();
+    vector <KeyPoint> getImgKeyPoints(int n);
+    vector <Point2f> getImgBoundaries(int n);
     Mat getImgDescriptors();
     
     //optical flow implementation
@@ -74,6 +74,10 @@ public:
     vector <Point2f> getGoodMatchesAsKeyPoints();
     vector <Point2f> getBoundariesKeyPoints();
 
+    vector <cv::Mat> getManyImgDescriptors();
+    void trainMatches(vector <cv::Mat> manyDescriptors);
+    int getDetectedImgNumber();
+    void reset();
     
     
 private:
@@ -97,6 +101,16 @@ private:
     //	vector< DMatch > good_Matches;				// matches between original and new descriptors
     Mat homography;								// prespective transform between original and new features
     vector <Point2f> imgBoundariesTransformed;	// perspective transformed bounds
+    
+    vector <vector <Point2f>> manyImgBoundaries;
+    vector <vector <Point2f>> manyimgBoundariesTransformed;
+    vector <vector <KeyPoint>> manyImgKeyPoints;
+    vector <cv::Mat> manyImgDescriptors;
+
+
+    
+    int detectedImgNumber;
+    
     
     OrbFeatureDetector detector;
     OrbDescriptorExtractor extractor;

@@ -20,14 +20,40 @@ void arApp::setup(){
     ofSetVerticalSync(true);
     ofSetFrameRate(60);
     
-    //load up tracker image and analyse it
-    markerImg.load(ofToDataPath("images/marker1.jpg"));
     
-    ////OrbTracker
+    
+//    ////OrbTracker 0 wood
+//    //load up tracker image and analyse it
+//    markerImg.load(ofToDataPath("images/3.jpg"));
+//    markerImg.resize(markerImg.getWidth()/2,markerImg.getHeight()/2);
+//    //analyse image to get its features
+//    orbTracker.analyseImage(markerImg);
+//    //create boundaries for the analysed image
+//    orbTracker.createBoundaries();
+
+
+    ////OrbTracker 1 pebbles
+    //load up tracker image and analyse it
+    markerImg.load(ofToDataPath("images/1.jpg"));
+    markerImg.resize(markerImg.getWidth()/2,markerImg.getHeight()/2);
     //analyse image to get its features
     orbTracker.analyseImage(markerImg);
     //create boundaries for the analysed image
     orbTracker.createBoundaries();
+
+    
+//    ////OrbTracker 2 road
+//    //load up tracker image and analyse it
+//    markerImg.load(ofToDataPath("images/2.jpg"));
+//    markerImg.resize(markerImg.getWidth()/2,markerImg.getHeight()/2);
+//    //analyse image to get its features
+//    orbTracker.analyseImage(markerImg);
+//    //create boundaries for the analysed image
+//    orbTracker.createBoundaries();
+    
+    //once we analyse all of the images we train our matcher with descriptors
+    orbTracker.trainMatches(orbTracker.getManyImgDescriptors());
+
     
     ////OpticalFlowTracker
     opticalFlow.setup(vidGrabber.getWidth(),vidGrabber.getHeight());
@@ -78,20 +104,19 @@ void arApp::update(){
                 //once we have more than 3 keypoints in boundaries we move to optical flow tracking
                 flow = true;
             }
-            //once detection has been run we match and create homography, which creates boundaries keypoints.
-            if(orbTracker.match(orbTracker.getImgDescriptors())>1){
-                orbTracker.createHomography(orbTracker.getImgKeyPoints(),orbTracker.getImgBoundaries());
-            }
+            
+            if(orbTracker.match()>1){
+            orbTracker.createHomography(orbTracker.getImgKeyPoints(orbTracker.getDetectedImgNumber()),orbTracker.getImgBoundaries(orbTracker.getDetectedImgNumber()));
+
+            };
         }
         
         if(flow==true){
             //when we have 4 points in boundaries we pass them to optical flow function for easy tracking
-            opticalFlow.updateFlowImage(vidGrabber.getPixels().getData(),orbTracker.getBoundariesKeyPoints());
+            opticalFlow.updateFlowImage(vidGrabber.getPixels().getData(),orbTracker.getBoundariesKeyPoints(),orbMagic);
             //disabling detection/tracking/matching from orbTracker
             orbMagic = false;
             
-            
-            cout << opticalFlow.trackingPointsVisible() <<endl;
             
         }
     
@@ -123,6 +148,8 @@ void arApp::draw(){
     ofDrawBitmapString(ofGetWidth(), 20, 20);
     ofDrawBitmapString(ofGetHeight(), 20, 40);
     
+    orbTracker.draw();
+    
     //draw op
     opticalFlow.drawHomography();
     
@@ -137,14 +164,36 @@ void arApp::draw(){
     if(flow){
         
         ofSetColor(255,0,0);
-        ofDrawSphere(opticalFlow.getMiddlePoint().x,opticalFlow.getMiddlePoint().y,10,opticalFlow.getDrawingScalar());
+//        ofDrawSphere(opticalFlow.getMiddlePoint().x,opticalFlow.getMiddlePoint().y,10,opticalFlow.getDrawingScalar());
         
         if(opticalFlow.trackingPointsVisible()){
-            ofSetColor(255);
+            ofSetColor(0,255,0);
             ofSetLineWidth(7);
             ofNoFill();
             ofDrawRectangle(80,36,ofGetWidth(),ofGetHeight());
+            
+            if(orbTracker.getDetectedImgNumber()==0){
+                ofDrawBitmapString("Wood!",opticalFlow.getMiddlePoint().x,opticalFlow.getMiddlePoint().y,10);
+            }
+            if(orbTracker.getDetectedImgNumber()==1){
+                ofDrawBitmapString("Pebbles!",opticalFlow.getMiddlePoint().x,opticalFlow.getMiddlePoint().y,10);
+            }
+            if(orbTracker.getDetectedImgNumber()==2){
+                ofDrawBitmapString("Road!",opticalFlow.getMiddlePoint().x,opticalFlow.getMiddlePoint().y,10);
+            }
+            
+            
         }
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
 //        ofBeginShape();
 //        ofSetColor(255,133,133);
 //        ofFill();
@@ -180,6 +229,8 @@ void arApp::touchMoved(ofTouchEventArgs & touch){
 //--------------------------------------------------------------
 void arApp::touchUp(ofTouchEventArgs & touch){
     orbMagic =!orbMagic;
+    flow = false;
+    orbTracker.reset();
 
 }
 

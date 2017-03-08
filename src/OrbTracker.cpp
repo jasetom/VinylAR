@@ -19,7 +19,7 @@ OrbTracker::OrbTracker(){
     bDrawImage = false;
     bDrawFeatures = false;
     bDrawDescriptors = false;
-    bDrawHomography = true;
+    bDrawHomography = false;
 
     
     //number of features
@@ -218,36 +218,63 @@ void OrbTracker::createBoundaries(){
     imgBoundaries.push_back(Point2f(p2.x, p2.y));
     imgBoundaries.push_back(Point2f(p1.x, p2.y));
     
+    manyImgBoundaries.push_back(imgBoundaries);
+    
 }
 
 
 //-----------------------------------------------------
-int OrbTracker::match(Mat descriptors){
+int OrbTracker::match(){
     // this function tries to match keypoints and descriptors with the current scene
     // if there is no match, it returns 0,
-    // if there is a match, it returns the number of matches and saves the perspective transform and bounding box
+    // if there is a match, it returns the number of matches
 
         // Matching descriptor vectors using knn BF matcher
         vector< vector< DMatch > > matches;
-        if(!descriptors.empty() && !cameraDescriptors.empty() ){
-            matcher.knnMatch(descriptors,cameraDescriptors,matches,200);
+        if(!cameraDescriptors.empty() ){
+           // matcher.knnMatch(descriptors,cameraDescriptors,matches,200);
+            matcher.knnMatch(cameraDescriptors, matches, 200);
+
             
             //        flannMatcher.knnMatch(descriptors, descriptors_Scene, matches, 20);
             //        knnMatch( const Mat& queryDescriptors, const Mat& trainDescriptors,
             //                 CV_OUT vector<vector<DMatch> >& matches, int k,
             //                 const Mat& mask=Mat(), bool compactResult=false ) const;
         }
+    
         goodMatches.clear();
 
-                
+
         float ratio = 0.5;
-        for(int i=0; i<matches.size(); i++) {
+        for(int i=0; i<matches.size(); i++){
+            
             if((matches[i].size()==1)||(matches[i][0].distance/matches[i][1].distance<ratio)){
                 goodMatches.push_back(matches[i][0]);
+                
+               // cout << "matches imgIdx: " << matches[i][i].imgIdx <<endl;
+
+                
+                //we store the number of image matched in this variable for later use
+                detectedImgNumber = goodMatches[0].imgIdx;
             }
         }
-        
-        
+    
+//    cout << "matches size: " << matches.size() <<endl;
+//    cout << "goodmatches size: " << goodMatches.size() <<endl;
+//    
+//    
+    
+//    if(detectedImgNumber==0){
+//        cout << "wood" <<endl;
+//    }
+//    if(detectedImgNumber==1){
+//        cout << "pebbles" <<endl;
+//    }
+//    if(detectedImgNumber==2){
+//        cout << "road" <<endl;
+//    }
+
+    
         if(goodMatches.size() > minMatches){
             // being here means we have found a decent match
             return goodMatches.size();
@@ -255,13 +282,28 @@ int OrbTracker::match(Mat descriptors){
             return 0;
         }
 
-    
-    
 }
-
 
 //-----------------------------------------------------
 void OrbTracker::createHomography(vector<KeyPoint> keyPoints, vector <Point2f> boundaries){
+    
+    //                orbTracker.createHomography(orbTracker.getImgKeyPoints(),orbTracker.getImgBoundaries());
+
+//    
+//    cout << "we are in create homography" << endl;
+//
+//    for(int i=0; i<keyPoints.size(); ++i){
+//        cout <<"keypoints: " << keyPoints[i].size << endl;
+//        
+//    }
+//    
+//    for(int i=0; i<boundaries.size(); ++i){
+//        cout <<"boundaries: " << boundaries[i] << endl;
+//        
+//    }
+    
+    
+    // saves the perspective transform and bounding box
     // find the homography
     // transform the bounding box for this scene
     vector <Point2f> cameraPts;
@@ -283,8 +325,8 @@ void OrbTracker::createHomography(vector<KeyPoint> keyPoints, vector <Point2f> b
     }
     
 }
-//-----------------------------------------------------
 
+//-----------------------------------------------------
 void OrbTracker::analyseImage(ofImage &img){
     
     int inputWidth = img.getWidth();
@@ -302,12 +344,23 @@ void OrbTracker::analyseImage(ofImage &img){
     //use detect function to detect and pass trackMat array to keypoints object
     detector.detect(imgMat, imgKeyPoints);
     
+    manyImgKeyPoints.push_back(imgKeyPoints);
+    
     // Calculate descriptors (feature vectors)
     extractor.compute(imgMat, imgKeyPoints, imgDescriptors);
     
+    manyImgDescriptors.push_back(imgDescriptors);
     
 }
 
+//-----------------------------------------------------
+void OrbTracker::trainMatches(vector <cv::Mat> manyDescriptors){
+    matcher.add(manyDescriptors);
+    matcher.train();
+    
+}
+
+//-----------------------------------------------------
 //              Getters and setters
 //-----------------------------------------------------
 
@@ -316,13 +369,15 @@ int OrbTracker::getGoodMatchesSize(){
 }
 
 //-----------------------------------------------------
-vector <KeyPoint> OrbTracker::getImgKeyPoints(){
-    return imgKeyPoints;
+vector <KeyPoint> OrbTracker::getImgKeyPoints(int n){
+           return manyImgKeyPoints[n];
+//    return imgKeyPoints;
 }
 
 //-----------------------------------------------------
-vector <Point2f> OrbTracker::getImgBoundaries(){
-    return imgBoundaries;
+vector <Point2f> OrbTracker::getImgBoundaries(int n){
+    return manyImgBoundaries[n];
+//    return imgBoundaries;
 }
 
 //-----------------------------------------------------
@@ -330,12 +385,17 @@ Mat OrbTracker::getImgDescriptors(){
     return imgDescriptors;
 }
 //-----------------------------------------------------
+vector <cv::Mat> OrbTracker::getManyImgDescriptors(){
+    return manyImgDescriptors;
+}
+
+//-----------------------------------------------------
 //implementing optical flow
 vector <KeyPoint> OrbTracker::getCameraKeyPoints(){
     return cameraKeyPoints;
 }
-//-----------------------------------------------------
 
+//-----------------------------------------------------
 vector <Point2f> OrbTracker::getGoodMatchesAsKeyPoints(){
     
     if(!goodMatches.empty()){
@@ -354,8 +414,25 @@ vector <Point2f> OrbTracker::getGoodMatchesAsKeyPoints(){
     
 }
 
+//-----------------------------------------------------
 vector <Point2f> OrbTracker::getBoundariesKeyPoints(){
     return imgBoundariesTransformed;
+}
+
+//-----------------------------------------------------
+int OrbTracker::getDetectedImgNumber(){
+    return detectedImgNumber;
+}
+
+//-----------------------------------------------------
+
+void OrbTracker::reset(){
+    
+    goodMatchesAsKeyPoints.clear();
+    imgBoundariesTransformed.clear();
+    goodMatches.clear();
+
+    
     
 }
 

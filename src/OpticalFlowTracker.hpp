@@ -18,8 +18,8 @@ class OpticalFlowTracker{
 public:
     
     void setup(int cam_w, int cam_h);
-    void updateFlowImage(unsigned char *pix, vector<cv::Point2f> keyPointsToTrack);
-    void chooseFlowKeyPoints(vector<cv::Point2f> keyPointsToTrack);
+    void updateFlowImage(unsigned char *pix, vector<cv::Point2f> keyPointsToTrack,bool once);
+    void chooseFlowKeyPoints(vector<cv::Point2f> keyPointsToTrack,bool once);
     void trackFlowKeyPoints(vector<cv::Point2f> keyPointsToTrack);
     void drawHomography();
     void calcMidPoint(vector<cv::Point2f> boundariesPoints);
