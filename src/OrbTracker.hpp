@@ -4,7 +4,6 @@
 //
 //  Created by Tomas on 16/02/2017.
 //
-//
 
 #ifndef OrbTracker_hpp
 #define OrbTracker_hpp
@@ -21,7 +20,6 @@
 #include <opencv2/calib3d/calib3d.hpp>
 #include "opencv2/core/core.hpp"
 
-
 using namespace cv;
 
 class OrbTracker {
@@ -34,104 +32,58 @@ public:
     void drawFeatures();
     void drawDescriptors();
     void drawHomoGraphy();
-    void createBoundaries();
-
     // detect, create and save keypoints and descriptors in the image
     void analyseImage(ofImage& img);
-    
+    void createBoundaries(vector<KeyPoint> imgKeyPoints);
     // detect features in the upcomming stream of video pixels
     void detect(unsigned char * pix, int inputWidth, int inputHeight);
     void detect(Mat grayScaleVideo);
-
-    
+    void trainMatches(vector <cv::Mat> manyDescriptors);
+    void reset();
     // match current scene with analysed images
     int match();
-    
     // calculate the perspective transform and apply to bounds polygon
     void createHomography(vector<KeyPoint> keyPoints, vector <Point2f> bounds);
     
-    // access the tracked object:
-
+    /*Getters*/
+    vector <KeyPoint> getImgKeyPoints(int n);
+    vector <Point2f> getImgBoundaries(int n);
+    vector <KeyPoint> getCameraKeyPoints();
+    vector <Point2f> getGoodMatchesAsKeyPoints();
+    vector <Point2f> getBoundariesKeyPoints();
+    vector <cv::Mat> getManyImgDescriptors();
     
-    ofxCvGrayscaleImage trackImg;
-
+    Mat getImgDescriptors(int n);
+    int getDetectedImgNumber();
+    int getGoodMatchesSize();
     
+private:
+    float minMatches;
+    int detectedImgNumber;
+    int nFeatures;
     // Drawing options
     bool bDrawImage;
     bool bDrawFeatures;
     bool bDrawDescriptors;
     bool bDrawHomography;
     
-    /*              Getters and setters         */
-    // get the number of approved matches, a measure for the quality
-    int getGoodMatchesSize();
-    vector <KeyPoint> getImgKeyPoints(int n);
-    vector <Point2f> getImgBoundaries(int n);
-    Mat getImgDescriptors();
-    
-    Mat getImgDescriptors(int n);
-    
-    //optical flow implementation
-    vector <KeyPoint> getCameraKeyPoints();
-    vector <Point2f> getGoodMatchesAsKeyPoints();
-    vector <Point2f> getBoundariesKeyPoints();
-
-    vector <cv::Mat> getManyImgDescriptors();
-    void trainMatches(vector <cv::Mat> manyDescriptors);
-    int getDetectedImgNumber();
-    void reset();
-    
-    int match2();
-    
-    
-    
-    
-private:
-    float minMatches;
-    ofxCvColorImage inputImg;
-    ofxCvColorImage croppedImg;
-    
-    //tom
-    ofxCvColorImage         analyseImg;
-    ofxCvGrayscaleImage     greyImg;
-    
-    // keypoints and descriptors
-    vector<KeyPoint> imgKeyPoints;			// keypoints of the object we're tracking
-    Mat imgDescriptors;						// descriptors the object we're tracking
-    vector <Point2f> imgBoundaries;				// bounds of the original object
-    
-    
     vector<KeyPoint> cameraKeyPoints;			// keypoints in the current scene
     Mat cameraDescriptors;						// descriptors in the current scene
-    
-    //	vector< DMatch > good_Matches;				// matches between original and new descriptors
     Mat homography;								// prespective transform between original and new features
-    vector <Point2f> imgBoundariesTransformed;	// perspective transformed bounds
     
+    vector <Point2f> imgBoundariesTransformed;	// perspective transformed bounds
     vector <vector <Point2f>> manyImgBoundaries;
     vector <vector <Point2f>> manyimgBoundariesTransformed;
     vector <vector <KeyPoint>> manyImgKeyPoints;
     vector <cv::Mat> manyImgDescriptors;
-
-
-    
-    int detectedImgNumber;
-    
     
     OrbFeatureDetector detector;
     OrbDescriptorExtractor extractor;
-
-    int nFeatures;
-    
     BFMatcher matcher; //brute force matcher
     
-    vector<DMatch> goodMatches;				// matches between original and new descriptors
-
-    //optical flow implementation
+    vector<DMatch> goodMatches;	// matches between original and new descriptors
     vector<Point2f> goodMatchesAsKeyPoints;
     
-    
 };
-
 
 #endif /* OrbTracker_hpp */
