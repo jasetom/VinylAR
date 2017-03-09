@@ -161,8 +161,8 @@ int OrbTracker::match(){
     // Matching descriptor vectors using knn BF matcher
     vector< vector< DMatch > > matches;
     if(!cameraDescriptors.empty() ){
-        // matcher.knnMatch(descriptors,cameraDescriptors,matches,200);
         matcher.knnMatch(cameraDescriptors, matches, 20);
+
     }
     
     goodMatches.clear();
@@ -205,6 +205,9 @@ void OrbTracker::createHomography(vector<KeyPoint> keyPoints, vector <Point2f> b
             cameraPts.push_back(cameraKeyPoints[goodMatches[i].queryIdx].pt);
         }
         if( cameraPts.size() >5 && imgPts.size() > 5){
+            
+            
+            
             homography = findHomography(imgPts,cameraPts,CV_RANSAC);
             perspectiveTransform(boundaries,imgBoundariesTransformed,homography);
         }
@@ -238,6 +241,7 @@ void OrbTracker::draw(){
     ofPopStyle();
     
 }
+
 
 
 //-----------------------------------------------------
