@@ -20,37 +20,55 @@ void arApp::setup(){
     ofSetVerticalSync(true);
     ofSetFrameRate(60);
     
-    
-    
-    ////OrbTracker 0 wood
-    //load up tracker image and analyse it
-    markerImg.load(ofToDataPath("images/3.jpg"));
-    markerImg.resize(markerImg.getWidth()/2,markerImg.getHeight()/2);
-    //analyse image to get its features
-    orbTracker.analyseImage(markerImg);
-    //create boundaries for the analysed image
-    orbTracker.createBoundaries();
-
-
-    ////OrbTracker 1 pebbles
+    ////OrbTracker 0 pebbles
     //load up tracker image and analyse it
     markerImg.load(ofToDataPath("images/1.jpg"));
     markerImg.resize(markerImg.getWidth()/2,markerImg.getHeight()/2);
     //analyse image to get its features
     orbTracker.analyseImage(markerImg);
-    //create boundaries for the analysed image
-    orbTracker.createBoundaries();
-
     
-    ////OrbTracker 2 road
+    ////OrbTracker 1 deer
     //load up tracker image and analyse it
-    markerImg.load(ofToDataPath("images/2.jpg"));
+    markerImg.load(ofToDataPath("images/5.jpg"));
     markerImg.resize(markerImg.getWidth()/2,markerImg.getHeight()/2);
     //analyse image to get its features
     orbTracker.analyseImage(markerImg);
-    //create boundaries for the analysed image
-    orbTracker.createBoundaries();
     
+    ////OrbTracker 2 man
+    //load up tracker image and analyse it
+    markerImg.load(ofToDataPath("images/6.jpg"));
+    markerImg.resize(markerImg.getWidth()/2,markerImg.getHeight()/2);
+    //analyse image to get its features
+    orbTracker.analyseImage(markerImg);
+    
+    ////OrbTracker 3 wall
+    //load up tracker image and analyse it
+    markerImg.load(ofToDataPath("images/7.jpg"));
+    markerImg.resize(markerImg.getWidth()/2,markerImg.getHeight()/2);
+    //analyse image to get its features
+    orbTracker.analyseImage(markerImg);
+    
+    ////OrbTracker 4 traintracks
+    //load up tracker image and analyse it
+    markerImg.load(ofToDataPath("images/8.jpg"));
+    markerImg.resize(markerImg.getWidth()/2,markerImg.getHeight()/2);
+    //analyse image to get its features
+    orbTracker.analyseImage(markerImg);
+    
+    ////OrbTracker 5 roof
+    //load up tracker image and analyse it
+    markerImg.load(ofToDataPath("images/9.jpg"));
+    markerImg.resize(markerImg.getWidth()/2,markerImg.getHeight()/2);
+    //analyse image to get its features
+    orbTracker.analyseImage(markerImg);
+    
+    ////OrbTracker 6 car
+    //load up tracker image and analyse it
+    markerImg.load(ofToDataPath("images/10.jpg"));
+    markerImg.resize(markerImg.getWidth()/2,markerImg.getHeight()/2);
+    //analyse image to get its features
+    orbTracker.analyseImage(markerImg);
+
     //once we analyse all of the images we train our matcher with descriptors
     orbTracker.trainMatches(orbTracker.getManyImgDescriptors());
 
@@ -106,10 +124,8 @@ void arApp::update(){
             }
             
             if(orbTracker.match()>1){
-                if(orbTracker.match2()>1){
-                    orbTracker.createHomography(orbTracker.getImgKeyPoints(orbTracker.getDetectedImgNumber()),orbTracker.getImgBoundaries(orbTracker.getDetectedImgNumber()));
-                };
-            };
+                orbTracker.createHomography(orbTracker.getImgKeyPoints(orbTracker.getDetectedImgNumber()),orbTracker.getImgBoundaries(orbTracker.getDetectedImgNumber()));
+            }
         }
         
         if(flow==true){
@@ -117,11 +133,9 @@ void arApp::update(){
             opticalFlow.updateFlowImage(vidGrabber.getPixels().getData(),orbTracker.getBoundariesKeyPoints(),orbMagic);
             //disabling detection/tracking/matching from orbTracker
             orbMagic = false;
-            
-            
         }
-    
     }
+
     //check sound
     if(flow){
         playSound = true;
@@ -168,33 +182,45 @@ void arApp::draw(){
 //        ofDrawSphere(opticalFlow.getMiddlePoint().x,opticalFlow.getMiddlePoint().y,10,opticalFlow.getDrawingScalar());
         
         if(opticalFlow.trackingPointsVisible()){
-            ofSetColor(0,255,0);
-            ofSetLineWidth(7);
-            ofNoFill();
-            ofDrawRectangle(80,36,ofGetWidth(),ofGetHeight());
-            
-            if(orbTracker.getDetectedImgNumber()==0){
-                ofDrawBitmapString("Wood!",opticalFlow.getMiddlePoint().x,opticalFlow.getMiddlePoint().y,10);
+            if(opticalFlow.trackingPointsVisible()){
+                ofSetColor(0,255,0);
+                ofSetLineWidth(7);
+                ofNoFill();
+                ofDrawRectangle(80,36,ofGetWidth(),ofGetHeight());
+                
+                if(orbTracker.getDetectedImgNumber()==0){
+                    ofDrawBitmapString("Pebbles!",opticalFlow.getMiddlePoint().x,opticalFlow.getMiddlePoint().y,10);
+                }
+                if(orbTracker.getDetectedImgNumber()==1){
+                    ofDrawBitmapString("Deer!",opticalFlow.getMiddlePoint().x,opticalFlow.getMiddlePoint().y,10);
+                }
+                if(orbTracker.getDetectedImgNumber()==2){
+                    ofDrawBitmapString("Man!",opticalFlow.getMiddlePoint().x,opticalFlow.getMiddlePoint().y,10);
+                }
+                if(orbTracker.getDetectedImgNumber()==3){
+                    ofDrawBitmapString("Wall!",opticalFlow.getMiddlePoint().x,opticalFlow.getMiddlePoint().y,10);
+                }
+                if(orbTracker.getDetectedImgNumber()==4){
+                    ofDrawBitmapString("Train tracks!",opticalFlow.getMiddlePoint().x,opticalFlow.getMiddlePoint().y,10);
+                }
+                if(orbTracker.getDetectedImgNumber()==5){
+                    ofDrawBitmapString("Roof!",opticalFlow.getMiddlePoint().x,opticalFlow.getMiddlePoint().y,10);
+                }
+                if(orbTracker.getDetectedImgNumber()==6){
+                    ofDrawBitmapString("Car!",opticalFlow.getMiddlePoint().x,opticalFlow.getMiddlePoint().y,10);
+                }
             }
-            if(orbTracker.getDetectedImgNumber()==1){
-                ofDrawBitmapString("Pebbles!",opticalFlow.getMiddlePoint().x,opticalFlow.getMiddlePoint().y,10);
-            }
-            if(orbTracker.getDetectedImgNumber()==2){
-                ofDrawBitmapString("Road!",opticalFlow.getMiddlePoint().x,opticalFlow.getMiddlePoint().y,10);
-            }
-            
-            
         }
         
+        ////OrbTracker 0 pebbles yes
+        ////OrbTracker 1 deer  yes
+        ////OrbTracker 2 man yeah~
+        ////OrbTracker 3 wall printed maybe
+        ////OrbTracker 4 traintracks not bad
+        ////OrbTracker 5 roof square not bad
+        ////OrbTracker 6 car yes, very good
         
-        
-        
-        
-        
-        
-        
-        
-        
+        //preparation for visualisations implementation
 //        ofBeginShape();
 //        ofSetColor(255,133,133);
 //        ofFill();
