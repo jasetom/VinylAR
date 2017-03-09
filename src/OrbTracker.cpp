@@ -280,7 +280,7 @@ int OrbTracker::match2(){
 
         //        matcher.knnMatch(cameraDescriptors, matches, 200);
         
-        matcher.knnMatch(getImgDescriptors(detectedImgNumber),cameraDescriptors, matches, 200);
+        matcher.knnMatch(cameraDescriptors,getImgDescriptors(detectedImgNumber), matches, 200);
 
     }
     
@@ -340,6 +340,9 @@ void OrbTracker::createHomography(vector<KeyPoint> keyPoints, vector <Point2f> b
             cameraPts.push_back(cameraKeyPoints[goodMatches[i].trainIdx].pt);
         }
         if( cameraPts.size() >5 && imgPts.size() > 5){
+            
+            
+            
             homography = findHomography(imgPts,cameraPts,CV_RANSAC);
             perspectiveTransform(boundaries,imgBoundariesTransformed,homography);
         }
@@ -354,6 +357,9 @@ void OrbTracker::analyseImage(ofImage &img){
     int inputWidth = img.getWidth();
     int inputHeight = img.getHeight();
     unsigned char *pix = img.getPixels().getData();
+    
+    analyseImg.allocate(inputWidth,inputHeight);
+    greyImg.allocate(inputWidth,inputHeight);
 
     // create the cvImage from the ofImage
     analyseImg.setFromPixels(pix, inputWidth, inputHeight);
