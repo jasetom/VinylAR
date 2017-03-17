@@ -26,6 +26,7 @@
 		BD2DC8B4CC2C2BC0DD128073 /* AssetsLibrary.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CF6F9415A1CDA4F93172643E /* AssetsLibrary.framework */; };
 		D3301F6A0B43BB293ED97C1D /* ofxCvShortImage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8A4DD23693DFAB8EC05FAA5D /* ofxCvShortImage.cpp */; };
 		E212C821D1064B92DD953A42 /* ofxCvHaarFinder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A16CBF2E8CFE43AF54FE6F5 /* ofxCvHaarFinder.cpp */; };
+		E26B3BAE1E7C157C005C813B /* MusicManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E26B3BAC1E7C157C005C813B /* MusicManager.cpp */; };
 		E29125AE1E560C5700950261 /* OrbTracker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E29125AC1E560C5700950261 /* OrbTracker.cpp */; };
 		E2C87DD91E49E79F003035BB /* arAppViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = E2C87DCC1E49E79F003035BB /* arAppViewController.mm */; };
 		E2C87DDA1E49E79F003035BB /* MyAppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = E2C87DCF1E49E79F003035BB /* MyAppDelegate.mm */; };
@@ -237,6 +238,8 @@
 		DEA2EDC0AFD59176FDEDC222 /* ofxCvShortImage.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = ofxCvShortImage.h; path = ../../../addons/ofxOpenCv/src/ofxCvShortImage.h; sourceTree = SOURCE_ROOT; };
 		E14D3EF03E140F5604900412 /* tracking.hpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = tracking.hpp; path = ../../../addons/ofxOpenCv/libs/opencv/include/opencv2/video/tracking.hpp; sourceTree = SOURCE_ROOT; };
 		E21FF871B93E31DA43FE7E42 /* vec_distance_detail.hpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = vec_distance_detail.hpp; path = ../../../addons/ofxOpenCv/libs/opencv/include/opencv2/gpu/device/detail/vec_distance_detail.hpp; sourceTree = SOURCE_ROOT; };
+		E26B3BAC1E7C157C005C813B /* MusicManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MusicManager.cpp; sourceTree = "<group>"; };
+		E26B3BAD1E7C157C005C813B /* MusicManager.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = MusicManager.hpp; sourceTree = "<group>"; };
 		E29125AC1E560C5700950261 /* OrbTracker.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = OrbTracker.cpp; sourceTree = "<group>"; };
 		E29125AD1E560C5700950261 /* OrbTracker.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = OrbTracker.hpp; sourceTree = "<group>"; };
 		E2C87DCB1E49E79F003035BB /* arAppViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = arAppViewController.h; sourceTree = "<group>"; };
@@ -892,6 +895,8 @@
 				E2E98CC01E66EF1A00522005 /* OpticalFlowTracker.hpp */,
 				E4D8936D11527B74007E1F53 /* arApp.mm */,
 				E4D8936C11527B74007E1F53 /* arApp.h */,
+				E26B3BAC1E7C157C005C813B /* MusicManager.cpp */,
+				E26B3BAD1E7C157C005C813B /* MusicManager.hpp */,
 			);
 			path = src;
 			sourceTree = SOURCE_ROOT;
@@ -1032,6 +1037,7 @@
 				E2E98CDE1E688D5900522005 /* maxiAtoms.cpp in Sources */,
 				169D3C72FDE6C5590A1616F5 /* ofxCvFloatImage.cpp in Sources */,
 				E2E98CE11E688D5900522005 /* maxiGrains.cpp in Sources */,
+				E26B3BAE1E7C157C005C813B /* MusicManager.cpp in Sources */,
 				E2E98CE31E688D5900522005 /* maximilian.cpp in Sources */,
 				E2E98CE41E688D5900522005 /* stb_vorbis.c in Sources */,
 				E2E98CDD1E688D5900522005 /* fft.cpp in Sources */,

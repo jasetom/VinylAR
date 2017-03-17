@@ -178,8 +178,8 @@ int OrbTracker::match(){
     }
     
     if(goodMatches.size() > minMatches){
-        // being here means we have found a decent match
-        detectedImgNumber = goodMatches[minMatches].imgIdx;
+        // being here means we have found a decent match, we add one so that if img number = 0 we assume that nothing is detected
+        detectedImgNumber = goodMatches[minMatches].imgIdx+1;
         return goodMatches.size();
     }else{
         return 0;

@@ -15,10 +15,15 @@ void arApp::setup(){
     ARViewBoundsSize.height = [[UIScreen mainScreen] bounds].size.height;
     ARViewOrientation = UIInterfaceOrientationPortrait;
 
+    ofEnableAntiAliasing();
+    ofEnableSmoothing();
+    
+    
     //basic setup for programm
     vidGrabber.initGrabber(640,480);
     ofSetVerticalSync(true);
     ofSetFrameRate(60);
+     
     
     ////OrbTracker 0 pebbles
     //load up tracker image and analyse it
@@ -29,42 +34,42 @@ void arApp::setup(){
     
     ////OrbTracker 1 deer
     //load up tracker image and analyse it
-    markerImg.load(ofToDataPath("images/5.jpg"));
+    markerImg.load(ofToDataPath("images/2.jpg"));
     markerImg.resize(markerImg.getWidth()/2,markerImg.getHeight()/2);
     //analyse image to get its features
     orbTracker.analyseImage(markerImg);
     
     ////OrbTracker 2 man
     //load up tracker image and analyse it
-    markerImg.load(ofToDataPath("images/6.jpg"));
+    markerImg.load(ofToDataPath("images/3.jpg"));
     markerImg.resize(markerImg.getWidth()/2,markerImg.getHeight()/2);
     //analyse image to get its features
     orbTracker.analyseImage(markerImg);
     
     ////OrbTracker 3 wall
     //load up tracker image and analyse it
-    markerImg.load(ofToDataPath("images/7.jpg"));
+    markerImg.load(ofToDataPath("images/4.jpg"));
     markerImg.resize(markerImg.getWidth()/2,markerImg.getHeight()/2);
     //analyse image to get its features
     orbTracker.analyseImage(markerImg);
     
     ////OrbTracker 4 traintracks
     //load up tracker image and analyse it
-    markerImg.load(ofToDataPath("images/8.jpg"));
+    markerImg.load(ofToDataPath("images/5.jpg"));
     markerImg.resize(markerImg.getWidth()/2,markerImg.getHeight()/2);
     //analyse image to get its features
     orbTracker.analyseImage(markerImg);
     
     ////OrbTracker 5 roof
     //load up tracker image and analyse it
-    markerImg.load(ofToDataPath("images/9.jpg"));
+    markerImg.load(ofToDataPath("images/6.jpg"));
     markerImg.resize(markerImg.getWidth()/2,markerImg.getHeight()/2);
     //analyse image to get its features
     orbTracker.analyseImage(markerImg);
     
     ////OrbTracker 6 car
     //load up tracker image and analyse it
-    markerImg.load(ofToDataPath("images/10.jpg"));
+    markerImg.load(ofToDataPath("images/7.jpg"));
     markerImg.resize(markerImg.getWidth()/2,markerImg.getHeight()/2);
     //analyse image to get its features
     orbTracker.analyseImage(markerImg);
@@ -77,33 +82,23 @@ void arApp::setup(){
     opticalFlow.setup(vidGrabber.getWidth(),vidGrabber.getHeight());
     
     ////Sound setup
-    sampleRate 			= 44100; /* Sampling Rate */
-    initialBufferSize	= 512;	/* Buffer Size. you have to fill this buffer with sound*/
-    
+    //setup Music Manager
+    musicMan.setup();
+
     //left and right audio output sizes
+    initialBufferSize = 512;
     lAudio = new float[initialBufferSize];
     rAudio = new float[initialBufferSize];
     
-    //loading sample track
-    samp1.load(ofToDataPath("sounds/beat2.wav"));
-    samp2.load(ofToDataPath("sounds/beat3.wav"));
-    samp3.load(ofToDataPath("sounds/beat4.wav"));
+    detectButton.set(ofGetScreenWidth()/2, 510);
+    detectBtnRadius = 40;
+    bDetectButton = false;
     
-    samp = samp1;
+    nextSongButton.set(240, 510, 50, 50);
+    bNextButton = false;
     
-    //set up maxim
-    ofxMaxiSettings::setup(sampleRate, 2, initialBufferSize);
-    
-    //setup fft
-    fftSize = 1024;
-    mfft.setup(fftSize, 512, 256);
-    
-    //this allows to mix audio from other apps
-    //    ofxiOSSoundStream::setMixWithOtherApps(true);
-    
-    //this starts DAC using opeframeworks
-    ofSoundStreamSetup(2, 0, this, sampleRate, initialBufferSize, 4);
-
+    prevSongButton.set(30, 510, 50, 50);
+    bPrevButton = false;
     
 }
 
@@ -124,7 +119,12 @@ void arApp::update(){
             }
             
             if(orbTracker.match()>1){
-                orbTracker.createHomography(orbTracker.getImgKeyPoints(orbTracker.getDetectedImgNumber()),orbTracker.getImgBoundaries(orbTracker.getDetectedImgNumber()));
+            //we create homography with detected img number. we do -1 as to access correct vectors for the images
+                orbTracker.createHomography(orbTracker.getImgKeyPoints(orbTracker.getDetectedImgNumber()-1),orbTracker.getImgBoundaries(orbTracker.getDetectedImgNumber()-1));
+                
+                //we call firstDetect function in music player to change some variables
+                musicMan.firstDetect();
+                
             }
         }
         
@@ -133,15 +133,35 @@ void arApp::update(){
             opticalFlow.updateFlowImage(vidGrabber.getPixels().getData(),orbTracker.getBoundariesKeyPoints(),orbMagic);
             //disabling detection/tracking/matching from orbTracker
             orbMagic = false;
+            musicMan.play(true);
+
         }
     }
-
-    //check sound
-    if(flow){
-        playSound = true;
-    }else if(!flow){
-        playSound = false;
+    
+    musicMan.update(orbTracker.getDetectedImgNumber());
+    
+    
+    //check buttons
+    if (bDetectButton){
+        orbMagic =!orbMagic;
+        flow = false;
+        orbTracker.reset();
+        musicMan.play(false);
+        bDetectButton=!bDetectButton;
     }
+    
+        if (bPrevButton){
+            musicMan.prevSong();
+            bPrevButton =!bPrevButton;
+        }
+        if (bNextButton){
+            musicMan.nextSong();
+            bNextButton=!bNextButton;
+        }
+    
+    
+    
+    
     
 }
 
@@ -150,12 +170,13 @@ void arApp::update(){
 
 //--------------------------------------------------------------
 void arApp::draw(){
-
+    
     //iphone se size 568 x 320
     //camera img size 640 x 480
     //therefore we center it out using translate
+    ofPushMatrix();
     ofTranslate(-80,-36);
-    
+
     ofSetColor(255);
     vidGrabber.draw(0,0);
     
@@ -165,8 +186,7 @@ void arApp::draw(){
     
     orbTracker.draw();
     
-    //draw op
-    opticalFlow.drawHomography();
+    //homography was here
     
     if(orbMagic){
         ofSetColor(255,200,0);
@@ -174,51 +194,52 @@ void arApp::draw(){
         ofNoFill();
         ofDrawRectangle(80,36,ofGetWidth(),ofGetHeight());
     }
-        
+    
     //here we would draw sound
     if(flow){
-        
-        ofSetColor(255,0,0);
-//        ofDrawSphere(opticalFlow.getMiddlePoint().x,opticalFlow.getMiddlePoint().y,10,opticalFlow.getDrawingScalar());
-        
-        if(opticalFlow.trackingPointsVisible()){
-            if(opticalFlow.trackingPointsVisible()){
-                ofSetColor(0,255,0);
-                ofSetLineWidth(7);
-                ofNoFill();
-                ofDrawRectangle(80,36,ofGetWidth(),ofGetHeight());
                 
-                if(orbTracker.getDetectedImgNumber()==0){
-                    ofDrawBitmapString("Pebbles!",opticalFlow.getMiddlePoint().x,opticalFlow.getMiddlePoint().y,10);
-                }
-                if(orbTracker.getDetectedImgNumber()==1){
-                    ofDrawBitmapString("Deer!",opticalFlow.getMiddlePoint().x,opticalFlow.getMiddlePoint().y,10);
-                }
-                if(orbTracker.getDetectedImgNumber()==2){
-                    ofDrawBitmapString("Man!",opticalFlow.getMiddlePoint().x,opticalFlow.getMiddlePoint().y,10);
-                }
-                if(orbTracker.getDetectedImgNumber()==3){
-                    ofDrawBitmapString("Wall!",opticalFlow.getMiddlePoint().x,opticalFlow.getMiddlePoint().y,10);
-                }
-                if(orbTracker.getDetectedImgNumber()==4){
-                    ofDrawBitmapString("Train tracks!",opticalFlow.getMiddlePoint().x,opticalFlow.getMiddlePoint().y,10);
-                }
-                if(orbTracker.getDetectedImgNumber()==5){
-                    ofDrawBitmapString("Roof!",opticalFlow.getMiddlePoint().x,opticalFlow.getMiddlePoint().y,10);
-                }
-                if(orbTracker.getDetectedImgNumber()==6){
-                    ofDrawBitmapString("Car!",opticalFlow.getMiddlePoint().x,opticalFlow.getMiddlePoint().y,10);
+        if(opticalFlow.trackingPointsVisible()){
+            
+            
+            //draw op homography
+            opticalFlow.drawHomography();
+            
+            
+//            ofSetColor(0,255,0);
+//            ofSetLineWidth(7);
+//            ofNoFill();
+//            ofDrawRectangle(80,36,ofGetWidth(),ofGetHeight());
+            
+            if(orbTracker.getDetectedImgNumber()==1){
+                ofDrawBitmapString("Pebbles! "+ musicMan.getCurrentSongName(),opticalFlow.getMiddlePoint().x,opticalFlow.getMiddlePoint().y,10);
+                //                                ofDrawSphere(opticalFlow.getMiddlePoint().x,opticalFlow.getMiddlePoint().y,10,opticalFlow.getDrawingScalar());
+                
+                if(musicMan.isPlay()){
+                    //
+                    musicMan.draw(opticalFlow.getMiddlePoint().x,opticalFlow.getMiddlePoint().y);
+                    
                 }
             }
+            
+            if(orbTracker.getDetectedImgNumber()==2){
+                ofDrawBitmapString("Man!",opticalFlow.getMiddlePoint().x,opticalFlow.getMiddlePoint().y,10);
+            }
+            if(orbTracker.getDetectedImgNumber()==3){
+                ofDrawBitmapString("Wall!",opticalFlow.getMiddlePoint().x,opticalFlow.getMiddlePoint().y,10);
+            }
+            if(orbTracker.getDetectedImgNumber()==4){
+                ofDrawBitmapString("Train tracks!",opticalFlow.getMiddlePoint().x,opticalFlow.getMiddlePoint().y,10);
+            }
+            if(orbTracker.getDetectedImgNumber()==5){
+                ofDrawBitmapString("Roof!",opticalFlow.getMiddlePoint().x,opticalFlow.getMiddlePoint().y,10);
+            }
+            if(orbTracker.getDetectedImgNumber()==6){
+                   ofDrawBitmapString("Car!",opticalFlow.getMiddlePoint().x,opticalFlow.getMiddlePoint().y,10);
+            }
+            
+        }else{
+            musicMan.play(false);
         }
-        
-        ////OrbTracker 0 pebbles yes
-        ////OrbTracker 1 deer  yes
-        ////OrbTracker 2 man yeah~
-        ////OrbTracker 3 wall printed maybe
-        ////OrbTracker 4 traintracks not bad
-        ////OrbTracker 5 roof square not bad
-        ////OrbTracker 6 car yes, very good
         
         //preparation for visualisations implementation
 //        ofBeginShape();
@@ -235,6 +256,18 @@ void arApp::draw(){
 //        }
 //        ofEndShape();
     }
+    
+    ofPopMatrix();
+    //drawing gui on top of everything
+    ofSetColor(255);
+    ofNoFill();
+    ofSetLineWidth(2);
+    ofSetCircleResolution(1000);
+    ofDrawCircle(detectButton, detectBtnRadius);
+    if(musicMan.isPlay()){
+        ofDrawRectangle(prevSongButton);
+        ofDrawRectangle(nextSongButton);
+    }
    
 }
 
@@ -245,6 +278,24 @@ void arApp::exit(){
 
 //--------------------------------------------------------------
 void arApp::touchDown(ofTouchEventArgs & touch){
+    
+    //checking locations of touch on the screen for the buttons
+    if (detectButton.distance(ofPoint(touch.x,touch.y)) < detectBtnRadius) {
+        bDetectButton = !bDetectButton;
+    }
+
+    //check for buttons only when points are visible
+    if(opticalFlow.trackingPointsVisible()){
+
+        if (prevSongButton.inside(touch.x, touch.y)) {
+            bPrevButton = !bPrevButton;
+        }
+    
+        if (nextSongButton.inside(touch.x, touch.y)) {
+            bNextButton = !bNextButton;
+        }
+    }
+    
 
 }
 
@@ -255,9 +306,6 @@ void arApp::touchMoved(ofTouchEventArgs & touch){
 
 //--------------------------------------------------------------
 void arApp::touchUp(ofTouchEventArgs & touch){
-    orbMagic =!orbMagic;
-    flow = false;
-    orbTracker.reset();
 
 }
 
@@ -293,25 +341,6 @@ void arApp::deviceOrientationChanged(int newOrientation){
 //--------------------------------------------------------------
 void arApp::audioOut(float * output, int bufferSize, int nChannels) {
     //audio output
-    for (int i = 0; i < bufferSize; i++){
-        //check wheter to play sound. Plays only when the AR marker is detected.
-        if(playSound == true){
-            
-            //play sound
-            playingSound = samp.play();
-            
-            //process sound and convert magnitudes to decibels in the mfft.
-            if (mfft.process(playingSound)) {
-                mfft.magsToDB();
-            }
-            //volume
-            lAudio[i] = output[i * nChannels] = playingSound;// * 0.0;
-            rAudio[i] = output[i * nChannels + 1] = playingSound;//* 0.0;
-            
-        }else{
-            //if not playing set output to zero.
-            lAudio[i] = output[i * nChannels] = 0;
-            rAudio[i] = output[i * nChannels + 1] = 0;
-        }
-    }
+    musicMan.audioOut(output,bufferSize,nChannels,orbTracker.getDetectedImgNumber());
+
 }

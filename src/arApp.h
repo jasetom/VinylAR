@@ -11,7 +11,7 @@
 #include "OrbTracker.hpp"
 #include "OpticalFlowTracker.hpp"
 #include "ofxMaxim.h"
-
+#include "MusicManager.hpp"
 
 
 class arApp : public ofxiOSApp {
@@ -47,24 +47,25 @@ class arApp : public ofxiOSApp {
     
     /* Sound stuff */
     void audioOut(float * output, int bufferSize, int nChannels); //audio output function
-    int	initialBufferSize; //buffer size
     
-    maxiSample samp, samp1,samp2,samp3; //maxi sample objects
-    int sampleRate; //sample rate variable
-    
+    /* Music player */
+    MusicManager musicMan;
     double playingSound; //variable where we store data when sound is playing
-    bool playSound;
     
+    int initialBufferSize;
     float * lAudio; //left audio output
     float * rAudio; //right audio output
     
-    /* FFT stuff */
-    ofxMaxiFFT mfft;
-    int fftSize;
-    int bins, dataSize;
+    /* Basic GUI */
+    ofPoint detectButton;
+    bool bDetectButton;
+    int detectBtnRadius;
+    
+    ofRectangle prevSongButton;
+    bool bPrevButton;
+    ofRectangle nextSongButton;
+    bool bNextButton;
 
-    
-    
     
 
 
