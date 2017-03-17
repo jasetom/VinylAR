@@ -8,6 +8,11 @@
 
 #include "ofxiOS.h"
 #include "AVFoundationVideoGrabber.h"
+#include "OrbTracker.hpp"
+#include "OpticalFlowTracker.hpp"
+#include "ofxMaxim.h"
+#include "MusicManager.hpp"
+
 
 class arApp : public ofxiOSApp {
 	
@@ -28,12 +33,40 @@ class arApp : public ofxiOSApp {
         void gotMemoryWarning();
         void deviceOrientationChanged(int newOrientation);
     
-        ofFpsCounter fps;
-        //pixels copy to ofImage
-        ofPixels p;
-        AVFoundationVideoGrabber fGrabber;
-        ofImage img;
-        ofTrueTypeFont font;
+    /* Tracking */
+    ofVideoGrabber vidGrabber;
+    ofImage videoImg;
+    //ORBtracking
+    OrbTracker orbTracker;
+    ofImage markerImg;
+    bool orbMagic;
+    //OpticalFlowTracking
+    OpticalFlowTracker opticalFlow;
+    bool flow;
+    int state;
+    
+    /* Sound stuff */
+    void audioOut(float * output, int bufferSize, int nChannels); //audio output function
+    
+    /* Music player */
+    MusicManager musicMan;
+    double playingSound; //variable where we store data when sound is playing
+    
+    int initialBufferSize;
+    float * lAudio; //left audio output
+    float * rAudio; //right audio output
+    
+    /* Basic GUI */
+    ofPoint detectButton;
+    bool bDetectButton;
+    int detectBtnRadius;
+    
+    ofRectangle prevSongButton;
+    bool bPrevButton;
+    ofRectangle nextSongButton;
+    bool bNextButton;
+
+    
 
 
 };
