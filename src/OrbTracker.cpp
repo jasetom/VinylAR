@@ -170,7 +170,7 @@ int OrbTracker::match(){
     float ratio = 0.5;
     for(int i=0; i<matches.size(); i++){
         
-        cout << matches[i].size() <<endl;
+//        cout << matches[i].size() <<endl;
         
         if((matches[i].size()==1)||(matches[i][0].distance/matches[i][1].distance<ratio)){
             goodMatches.push_back(matches[i][0]);

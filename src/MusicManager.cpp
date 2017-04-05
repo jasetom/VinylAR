@@ -288,7 +288,9 @@ void MusicManager::audioOut(float * output, int bufferSize, int nChannels, int i
                 rms = sqrt(sumRms);
                 
             }else if(playSound==false){
-                  samp.reset();
+                samp.reset();
+                playingSound=0;
+
                 //if playingSound false, set output to zero.
                 lAudio[i] = output[i * nChannels] = 0;
                 rAudio[i] = output[i * nChannels + 1] = 0;

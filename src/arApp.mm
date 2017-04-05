@@ -100,6 +100,10 @@ void arApp::setup(){
     prevSongButton.set(30, 510, 50, 50);
     bPrevButton = false;
     
+    
+    ////Visuals Setup
+    vizMan.setup();
+    
 }
 
 //--------------------------------------------------------------
@@ -159,8 +163,8 @@ void arApp::update(){
             bNextButton=!bNextButton;
         }
     
-    
-    
+    //needed to run some visualisations
+    vizMan.update();
     
     
 }
@@ -216,8 +220,20 @@ void arApp::draw(){
                 
                 if(musicMan.isPlay()){
                     //
-                    musicMan.draw(opticalFlow.getMiddlePoint().x,opticalFlow.getMiddlePoint().y);
+//                    musicMan.draw(opticalFlow.getMiddlePoint().x,opticalFlow.getMiddlePoint().y);
                     
+
+//                    vizMan.drawManyBoxes(opticalFlow.getMiddlePoint().x, opticalFlow.getMiddlePoint().y, musicMan.getSpecFlatness()
+//                                         , musicMan.getRms(), musicMan.getPeakFreq());
+                   
+//                   vizMan.drawIcoSphere(opticalFlow.getMiddlePoint().x, opticalFlow.getMiddlePoint().y, 100, musicMan.getRms(), musicMan.getPeakFreq());
+//                    vizMan.drawCone(opticalFlow.getMiddlePoint().x, opticalFlow.getMiddlePoint().y, 100, musicMan.getRms(), musicMan.getPeakFreq());
+//                    vizMan.drawSmallCubes(opticalFlow.getMiddlePoint().x, opticalFlow.getMiddlePoint().y, 100, musicMan.getRms(), musicMan.getPeakFreq());
+//                    vizMan.drawSphereAndCones(opticalFlow.getMiddlePoint().x, opticalFlow.getMiddlePoint().y, 100, musicMan.getRms(), musicMan.getPeakFreq());
+//                    vizMan.drawCylinders(opticalFlow.getMiddlePoint().x, opticalFlow.getMiddlePoint().y, 100, musicMan.getRms(), musicMan.getPeakFreq());
+//                  //  vizMan.drawBoxesV3(opticalFlow.getMiddlePoint().x, opticalFlow.getMiddlePoint().y, 100, musicMan.getRms(), musicMan.getPeakFreq());
+
+
                 }
             }
             

@@ -12,6 +12,8 @@
 #include "OpticalFlowTracker.hpp"
 #include "ofxMaxim.h"
 #include "MusicManager.hpp"
+#include "VisualsManager.hpp"
+
 
 
 class arApp : public ofxiOSApp {
@@ -65,6 +67,9 @@ class arApp : public ofxiOSApp {
     bool bPrevButton;
     ofRectangle nextSongButton;
     bool bNextButton;
+    
+    /* Visuals Manager */
+    VisualsManager vizMan;
 
     
 

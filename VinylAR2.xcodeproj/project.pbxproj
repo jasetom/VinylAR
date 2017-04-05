@@ -28,6 +28,7 @@
 		E212C821D1064B92DD953A42 /* ofxCvHaarFinder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A16CBF2E8CFE43AF54FE6F5 /* ofxCvHaarFinder.cpp */; };
 		E26B3BAE1E7C157C005C813B /* MusicManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E26B3BAC1E7C157C005C813B /* MusicManager.cpp */; };
 		E29125AE1E560C5700950261 /* OrbTracker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E29125AC1E560C5700950261 /* OrbTracker.cpp */; };
+		E29526891E94F2640099631B /* VisualsManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E29526871E94F2640099631B /* VisualsManager.cpp */; };
 		E2C87DD91E49E79F003035BB /* arAppViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = E2C87DCC1E49E79F003035BB /* arAppViewController.mm */; };
 		E2C87DDA1E49E79F003035BB /* MyAppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = E2C87DCF1E49E79F003035BB /* MyAppDelegate.mm */; };
 		E2C87DDB1E49E79F003035BB /* MyAppViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = E2C87DD11E49E79F003035BB /* MyAppViewController.mm */; };
@@ -242,6 +243,8 @@
 		E26B3BAD1E7C157C005C813B /* MusicManager.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = MusicManager.hpp; sourceTree = "<group>"; };
 		E29125AC1E560C5700950261 /* OrbTracker.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = OrbTracker.cpp; sourceTree = "<group>"; };
 		E29125AD1E560C5700950261 /* OrbTracker.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = OrbTracker.hpp; sourceTree = "<group>"; };
+		E29526871E94F2640099631B /* VisualsManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = VisualsManager.cpp; sourceTree = "<group>"; };
+		E29526881E94F2640099631B /* VisualsManager.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = VisualsManager.hpp; sourceTree = "<group>"; };
 		E2C87DCB1E49E79F003035BB /* arAppViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = arAppViewController.h; sourceTree = "<group>"; };
 		E2C87DCC1E49E79F003035BB /* arAppViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = arAppViewController.mm; sourceTree = "<group>"; };
 		E2C87DCE1E49E79F003035BB /* MyAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyAppDelegate.h; sourceTree = "<group>"; };
@@ -895,6 +898,8 @@
 				E2E98CC01E66EF1A00522005 /* OpticalFlowTracker.hpp */,
 				E4D8936D11527B74007E1F53 /* arApp.mm */,
 				E4D8936C11527B74007E1F53 /* arApp.h */,
+				E29526871E94F2640099631B /* VisualsManager.cpp */,
+				E29526881E94F2640099631B /* VisualsManager.hpp */,
 				E26B3BAC1E7C157C005C813B /* MusicManager.cpp */,
 				E26B3BAD1E7C157C005C813B /* MusicManager.hpp */,
 			);
@@ -1038,6 +1043,7 @@
 				169D3C72FDE6C5590A1616F5 /* ofxCvFloatImage.cpp in Sources */,
 				E2E98CE11E688D5900522005 /* maxiGrains.cpp in Sources */,
 				E26B3BAE1E7C157C005C813B /* MusicManager.cpp in Sources */,
+				E29526891E94F2640099631B /* VisualsManager.cpp in Sources */,
 				E2E98CE31E688D5900522005 /* maximilian.cpp in Sources */,
 				E2E98CE41E688D5900522005 /* stb_vorbis.c in Sources */,
 				E2E98CDD1E688D5900522005 /* fft.cpp in Sources */,

@@ -51,9 +51,6 @@ void OpticalFlowTracker::updateFlowImage(unsigned char* pix, vector<cv::Point2f>
     //when we are done with preparations, pass along keypoints to another function
     chooseFlowKeyPoints(keyPointsToTrack,once);
     
-//    [ error ] ofxCvGrayscaleImage: operator=: region of interest mismatch
-//    [ error ] ofTessellator: performTessellation(): mesh polygon tessellation failed, winding mode 0
-    
 }
 
 //-----------------------------------------------------
