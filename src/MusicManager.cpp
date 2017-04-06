@@ -73,6 +73,10 @@ void MusicManager::setup(){
     first = true;
     swapSong = true;
     
+    //threshold for beat detection
+    threshold = 0.3;
+    waitTime = 10;
+    
 }
 
 //-----------------------------------------------------
@@ -287,6 +291,8 @@ void MusicManager::audioOut(float * output, int bufferSize, int nChannels, int i
                 //and then square rooting the sum
                 rms = sqrt(sumRms);
                 
+
+                
             }else if(playSound==false){
                 samp.reset();
                 playingSound=0;
@@ -331,6 +337,8 @@ void MusicManager::analyseSound(){
     specFlatness = mfft.spectralFlatness();
     //calculate pitchHistogram
     calculatePitchHistogram();
+    
+    cout << "isBeat: " << isBeatDetected() << endl;
 }
 
 //-----------------------------------------------------
@@ -341,6 +349,64 @@ void MusicManager::calculatePitchHistogram(){
         j++;
         j = j % 12;
     }
+}
+
+
+
+
+//-----------------------------------------------------
+bool MusicManager::isBeatDetected(){
+    
+    //simple beat detection using spectral fluxuation
+    //adapted from Report of Mark Woulfe - http://doc.gold.ac.uk/~ma901mw/Year%203%20Project/Final%20Report/Report.pdf page 17
+
+    
+        //it is a very simple approach of detecting beats in an fft.
+        //how it works is we take the difference between of last bin of the fft with
+        //current bin of fft and add those differences to a variable called flux.
+        //then we set the waitTime, which is just a simple counter and a threshold variable.
+        //We detect the beat by assuming that the flux(uation) is greater than the threshold and
+        //some time (waitTime) has passed since the last detection.
+    float diff;
+    specFlux = 0.0;
+//    float prevFFT[windowSize/2+1];
+    
+    //check mfft.bins or fftSize/2
+    
+    for(int i=0; i < mfft.bins; i++){
+        prevFFT.push_back(mfft.magnitudes[i]);
+    }
+    
+    for(int i=0; i < fftSize/2; i++) {
+        //this is how we calculate the difference between lastfft and current fft bin magnitudes
+        diff = mfft.magnitudes[i] - prevFFT[i];;
+        //if diference is not zero add it to the fluxtuation variable
+        if (diff > 0) {
+            specFlux += diff;
+        }
+    }
+    //adjust fluxation depending on the number of the fft bins
+    specFlux /= fftSize/2;
+    //count down waitTime for the next beat detect
+    if (waitTime !=0){
+            waitTime--;
+    }
+    
+    //this is where we check if the flux variable is higher than manually set threshold
+    if (specFlux > threshold && waitTime ==0){
+        //this means that the beat has been detected
+        beatDetected = true;
+        //we also set wait time back up for it to detect another beat
+        waitTime = 10;
+        return true;
+    }else{
+        beatDetected = false;
+        return false;
+    }
+    
+
+    
+    
 }
 
 //-----------------------------------------------------

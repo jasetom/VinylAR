@@ -24,7 +24,7 @@ void VisualsManager::setup(){
 void VisualsManager::setupManyBoxes(){
     
     ofSetLineWidth(10);
-    ofSetBackgroundAuto(false);
+//    ofSetBackgroundAuto(false);
 
 }
 
@@ -139,15 +139,25 @@ void VisualsManager::updateBoxesV3(){
 //--- Draw functions
 
 //-----------------------------------------------------
+void VisualsManager::draw(int posX, int posY, int posZ, int scale){
+
+    
+}
+
+
+//-----------------------------------------------------
 void VisualsManager::drawManyBoxes(int posX, int posY, float param1, float param2, float param3){
     
+//    cout << "visualsManager RMS: " << RMS <<endl;
+
+
     
     //boxesv2
     
 //    float cloudSize = param1/2.0;
         float cloudSize = ofGetWidth()/2;
     
-    float maxBoxSize = 100;
+    float maxBoxSize = 50;
     //    float maxBoxSize = mouseY/100.0;
     
     float spacing = 1;
@@ -423,3 +433,49 @@ void VisualsManager::positionAndDrawCubes(ofBoxPrimitive bigBox, vector <ofBoxPr
     }
     
 }
+
+//--- Setting variables coming in from audio class
+//-----------------------------------------------------
+void VisualsManager::setRMS(float rms){
+   RMS = rms;
+}
+
+//-----------------------------------------------------
+void VisualsManager::setSpecFlatness(float sf){
+    specFlatness = sf;
+}
+
+//-----------------------------------------------------
+void VisualsManager::setSpecCentroid(float sc){
+    specCentroid = sc;
+}
+
+//-----------------------------------------------------
+void VisualsManager::setPeakFreq(float pf){
+    peakFreq = pf;
+}
+
+//-----------------------------------------------------
+void VisualsManager::setFFTmagnitudes(float fftm){
+    FFTmags = fftm;
+}
+
+//-----------------------------------------------------
+void VisualsManager::setMFFCs(float mffcs){
+    MFFCs = mffcs;
+}
+
+//-----------------------------------------------------
+void VisualsManager::setOctaveAverages(float oa){
+    octaveAverages = oa;
+}
+
+//-----------------------------------------------------
+void VisualsManager::setPitchHistogram(float ph){
+    pitchHistogram = ph;
+}
+
+//-----------------------------------------------------
+void VisualsManager::setMelBands(float mb){
+    melBands = mb;
+};

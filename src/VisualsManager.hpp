@@ -33,6 +33,7 @@ public:
 
     
     //Drawing functions
+    void draw(int posX, int posY, int posZ, int scale);
     void drawManyBoxes(int posX, int posY, float param1, float param2, float param3);
     void drawIcoSphere(int posX, int posY, int posZ, float param1, float param2);
     void drawCone(int posX, int posY, int posZ, float param1, float param2);
@@ -47,10 +48,33 @@ public:
     //---smallCubes
     void positionAndDrawCubes(ofBoxPrimitive bigBox, vector <ofBoxPrimitive> &smallBoxes);
 
+    //Set functions
+    void setRMS(float rms);
+    void setSpecFlatness(float sf);
+    void setSpecCentroid(float sc);
+    void setPeakFreq(float pf);
+    void setFFTmagnitudes(float fftm);
+    void setMFFCs(float mffcs);
+    void setOctaveAverages(float oa);
+    void setPitchHistogram(float ph);
+    void setMelBands(float mb);
+
+
     
 private:
     
     //Variables and objects
+    //Features to be set by MusicManager class
+    float RMS;
+    float specFlatness;
+    float specCentroid;
+    float peakFreq;
+    float FFTmags;
+    double MFFCs;
+    float octaveAverages;
+    float pitchHistogram;
+    float melBands;
+    
     
     //---manyBoxesViz variables
     ofBoxPrimitive box;

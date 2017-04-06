@@ -14,6 +14,19 @@
 #include "MusicManager.hpp"
 #include "VisualsManager.hpp"
 
+#include "ofxiOSPostGlitch.h"
+
+
+const int Num_Pattern = 5;
+
+const int Pattern[Num_Pattern][Num_Shaders] = {
+    1, 0, 0, 1, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 1, 0, 0, 0, 1,
+    1, 0, 0, 0, 0, 0, 1, 0, 0,
+    0, 0, 0, 0, 1, 0, 0, 0, 0,
+    0, 0, 1, 0, 0, 0, 0, 1, 0
+};
+
 
 
 class arApp : public ofxiOSApp {
@@ -59,6 +72,8 @@ class arApp : public ofxiOSApp {
     float * rAudio; //right audio output
     
     /* Basic GUI */
+     ofTrueTypeFont verdana14;
+    int appState;
     ofPoint detectButton;
     bool bDetectButton;
     int detectBtnRadius;
@@ -70,6 +85,11 @@ class arApp : public ofxiOSApp {
     
     /* Visuals Manager */
     VisualsManager vizMan;
+    
+    /* Postglitch shaders */
+    ofxiOSPostGlitch effectShaders;
+    int effectNumber;
+    ofFbo myFbo;
 
     
 

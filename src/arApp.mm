@@ -7,24 +7,51 @@
 
 //--------------------------------------------------------------
 void arApp::setup(){
+//    ofBackground(0);
+    appState = 0;
+//    ofSetOrientation(OF_ORIENTATION_90_RIGHT);
     
-    CGSize ARViewBoundsSize = CGSizeZero;
-    UIInterfaceOrientation ARViewOrientation = UIInterfaceOrientationUnknown;
+    //glitch
+    myFbo.allocate(ofGetScreenWidth(), ofGetScreenHeight());
+    effectShaders.setupFBO(&myFbo);
+    effectNumber = 0;
     
-    ARViewBoundsSize.width = [[UIScreen mainScreen] bounds].size.width;
-    ARViewBoundsSize.height = [[UIScreen mainScreen] bounds].size.height;
-    ARViewOrientation = UIInterfaceOrientationPortrait;
+    
+    
+    //old OF default is 96 - but this results in fonts looking larger than in other programs.
+    ofTrueTypeFont::setGlobalDpi(72);
+    
+    verdana14.load("verdana.ttf", 14, true, true);
+    verdana14.setLineHeight(18.0f);
+    verdana14.setLetterSpacing(1.037);
+    
+    
+        
+    
+    
+//    CGSize ARViewBoundsSize = CGSizeZero;
+//    UIInterfaceOrientation ARViewOrientation = UIInterfaceOrientationUnknown;
+//    
+//    ARViewBoundsSize.width = [[UIScreen mainScreen] bounds].size.width;
+//    ARViewBoundsSize.height = [[UIScreen mainScreen] bounds].size.height;
+//    ARViewOrientation = UIInterfaceOrientationPortrait;
 
     ofEnableAntiAliasing();
     ofEnableSmoothing();
+    
+
+//        ofBackground(0);
+//        ofSetColor(255);
+//        ofDrawBitmapString("Tap to begin!",ofGetWidth()*0.4,ofGetHeight()*0.5);
+
+
     
     
     //basic setup for programm
     vidGrabber.initGrabber(640,480);
     ofSetVerticalSync(true);
     ofSetFrameRate(60);
-     
-    
+
     ////OrbTracker 0 pebbles
     //load up tracker image and analyse it
     markerImg.load(ofToDataPath("images/1.jpg"));
@@ -81,6 +108,7 @@ void arApp::setup(){
     ////OpticalFlowTracker
     opticalFlow.setup(vidGrabber.getWidth(),vidGrabber.getHeight());
     
+    
     ////Sound setup
     //setup Music Manager
     musicMan.setup();
@@ -103,11 +131,14 @@ void arApp::setup(){
     
     ////Visuals Setup
     vizMan.setup();
-    
+
 }
 
 //--------------------------------------------------------------
 void arApp::update(){
+    
+    
+    if(appState==1){
     
     vidGrabber.update();
     if(vidGrabber.isFrameNew()){
@@ -165,8 +196,53 @@ void arApp::update(){
     
     //needed to run some visualisations
     vizMan.update();
+        
+        if(musicMan.isPlay()){
+            vizMan.setRMS(musicMan.getRms());
+            vizMan.setSpecFlatness(musicMan.getSpecFlatness());
+            vizMan.setSpecCentroid(musicMan.getSpecCentroid1());
+            vizMan.setPeakFreq(musicMan.getPeakFreq());
+            
+//            vizMan.setFFTmagnitudes(musicMan.getFftMagnitudes(<#int i#>));
+//            vizMan.setMFFCs(musicMan.getMfccs(<#int i#>));
+//            vizMan.setOctaveAverages(musicMan.getOctaveAvg(<#int i#>));
+//            vizMan.setPitchHistogram(musicMan.getPitchHistogram(<#int i#>));
+//            vizMan.setMelBands(musicMan.getMelBands(<#int i#>));
+
+        }
     
-    
+        
+        ///everything we put in here will be affected by effect shaders
+        myFbo.begin();
+        ofClear(0,0,0,0);
+        
+        if(musicMan.isPlay()){
+            //
+            //                    musicMan.draw(opticalFlow.getMiddlePoint().x,opticalFlow.getMiddlePoint().y);
+            
+            
+//            vizMan.drawManyBoxes(opticalFlow.getMiddlePoint().x, opticalFlow.getMiddlePoint().y, musicMan.getSpecFlatness()
+//                                 , musicMan.getRms(), musicMan.getPeakFreq());
+            
+//                               vizMan.drawIcoSphere(opticalFlow.getMiddlePoint().x, opticalFlow.getMiddlePoint().y, 100, musicMan.getRms(), musicMan.getPeakFreq());
+                                vizMan.drawCone(opticalFlow.getMiddlePoint().x, opticalFlow.getMiddlePoint().y, 100, musicMan.getRms(), musicMan.getPeakFreq());
+            //                    vizMan.drawSmallCubes(opticalFlow.getMiddlePoint().x, opticalFlow.getMiddlePoint().y, 100, musicMan.getRms(), musicMan.getPeakFreq());
+            //                    vizMan.drawSphereAndCones(opticalFlow.getMiddlePoint().x, opticalFlow.getMiddlePoint().y, 100, musicMan.getRms(), musicMan.getPeakFreq());
+            //                    vizMan.drawCylinders(opticalFlow.getMiddlePoint().x, opticalFlow.getMiddlePoint().y, 100, musicMan.getRms(), musicMan.getPeakFreq());
+            //                  //  vizMan.drawBoxesV3(opticalFlow.getMiddlePoint().x, opticalFlow.getMiddlePoint().y, 100, musicMan.getRms(), musicMan.getPeakFreq());
+            
+            
+        }
+
+
+        
+        myFbo.end();
+        
+        effectShaders.update(&myFbo);
+        
+        
+        
+    }
 }
 
     
@@ -174,6 +250,16 @@ void arApp::update(){
 
 //--------------------------------------------------------------
 void arApp::draw(){
+
+    if(appState==0){
+        
+        ofBackground(0);
+        ofSetColor(255);
+        verdana14.drawString("Tap to begin", ofGetWidth()*0.4, ofGetHeight()/2);
+    }
+    
+    
+    if(appState==1){
     
     //iphone se size 568 x 320
     //camera img size 640 x 480
@@ -184,9 +270,9 @@ void arApp::draw(){
     ofSetColor(255);
     vidGrabber.draw(0,0);
     
-    ofSetColor(0);
-    ofDrawBitmapString(ofGetWidth(), 20, 20);
-    ofDrawBitmapString(ofGetHeight(), 20, 40);
+    //ofSetColor(0);
+//    ofDrawBitmapString(ofGetWidth(), 20, 20);
+//    ofDrawBitmapString(ofGetHeight(), 20, 40);
     
     orbTracker.draw();
     
@@ -218,23 +304,29 @@ void arApp::draw(){
                 ofDrawBitmapString("Pebbles! "+ musicMan.getCurrentSongName(),opticalFlow.getMiddlePoint().x,opticalFlow.getMiddlePoint().y,10);
                 //                                ofDrawSphere(opticalFlow.getMiddlePoint().x,opticalFlow.getMiddlePoint().y,10,opticalFlow.getDrawingScalar());
                 
+                ////// moved to update
                 if(musicMan.isPlay()){
-                    //
-//                    musicMan.draw(opticalFlow.getMiddlePoint().x,opticalFlow.getMiddlePoint().y);
                     
-
+                    ofSetColor(255);
+                    effectShaders.draw(0,0);
+                    ofSetColor(255);
+//                    //
+////                    musicMan.draw(opticalFlow.getMiddlePoint().x,opticalFlow.getMiddlePoint().y);
+//                    
+//
 //                    vizMan.drawManyBoxes(opticalFlow.getMiddlePoint().x, opticalFlow.getMiddlePoint().y, musicMan.getSpecFlatness()
 //                                         , musicMan.getRms(), musicMan.getPeakFreq());
-                   
-//                   vizMan.drawIcoSphere(opticalFlow.getMiddlePoint().x, opticalFlow.getMiddlePoint().y, 100, musicMan.getRms(), musicMan.getPeakFreq());
-//                    vizMan.drawCone(opticalFlow.getMiddlePoint().x, opticalFlow.getMiddlePoint().y, 100, musicMan.getRms(), musicMan.getPeakFreq());
-//                    vizMan.drawSmallCubes(opticalFlow.getMiddlePoint().x, opticalFlow.getMiddlePoint().y, 100, musicMan.getRms(), musicMan.getPeakFreq());
-//                    vizMan.drawSphereAndCones(opticalFlow.getMiddlePoint().x, opticalFlow.getMiddlePoint().y, 100, musicMan.getRms(), musicMan.getPeakFreq());
-//                    vizMan.drawCylinders(opticalFlow.getMiddlePoint().x, opticalFlow.getMiddlePoint().y, 100, musicMan.getRms(), musicMan.getPeakFreq());
-//                  //  vizMan.drawBoxesV3(opticalFlow.getMiddlePoint().x, opticalFlow.getMiddlePoint().y, 100, musicMan.getRms(), musicMan.getPeakFreq());
-
-
+//                   
+////                   vizMan.drawIcoSphere(opticalFlow.getMiddlePoint().x, opticalFlow.getMiddlePoint().y, 100, musicMan.getRms(), musicMan.getPeakFreq());
+////                    vizMan.drawCone(opticalFlow.getMiddlePoint().x, opticalFlow.getMiddlePoint().y, 100, musicMan.getRms(), musicMan.getPeakFreq());
+////                    vizMan.drawSmallCubes(opticalFlow.getMiddlePoint().x, opticalFlow.getMiddlePoint().y, 100, musicMan.getRms(), musicMan.getPeakFreq());
+////                    vizMan.drawSphereAndCones(opticalFlow.getMiddlePoint().x, opticalFlow.getMiddlePoint().y, 100, musicMan.getRms(), musicMan.getPeakFreq());
+////                    vizMan.drawCylinders(opticalFlow.getMiddlePoint().x, opticalFlow.getMiddlePoint().y, 100, musicMan.getRms(), musicMan.getPeakFreq());
+////                  //  vizMan.drawBoxesV3(opticalFlow.getMiddlePoint().x, opticalFlow.getMiddlePoint().y, 100, musicMan.getRms(), musicMan.getPeakFreq());
+//
+//
                 }
+                ////////until here to update
             }
             
             if(orbTracker.getDetectedImgNumber()==2){
@@ -271,8 +363,13 @@ void arApp::draw(){
 //            ofDrawSphere(x,y,150,5+mfft.magnitudes[i]*2);
 //        }
 //        ofEndShape();
+        
+        
+
+        
     }
-    
+
+
     ofPopMatrix();
     //drawing gui on top of everything
     ofSetColor(255);
@@ -284,7 +381,8 @@ void arApp::draw(){
         ofDrawRectangle(prevSongButton);
         ofDrawRectangle(nextSongButton);
     }
-   
+        
+    }
 }
 
 //--------------------------------------------------------------
@@ -295,23 +393,35 @@ void arApp::exit(){
 //--------------------------------------------------------------
 void arApp::touchDown(ofTouchEventArgs & touch){
     
-    //checking locations of touch on the screen for the buttons
-    if (detectButton.distance(ofPoint(touch.x,touch.y)) < detectBtnRadius) {
-        bDetectButton = !bDetectButton;
-    }
+    if(appState==1){
+    
+        //checking locations of touch on the screen for the buttons
+        if (detectButton.distance(ofPoint(touch.x,touch.y)) < detectBtnRadius) {
+            bDetectButton = !bDetectButton;
+        }
 
-    //check for buttons only when points are visible
-    if(opticalFlow.trackingPointsVisible()){
+        //check for buttons only when points are visible
+        if(opticalFlow.trackingPointsVisible()){
 
-        if (prevSongButton.inside(touch.x, touch.y)) {
-            bPrevButton = !bPrevButton;
+            if (prevSongButton.inside(touch.x, touch.y)) {
+                bPrevButton = !bPrevButton;
+            }
+    
+            if (nextSongButton.inside(touch.x, touch.y)) {
+                bNextButton = !bNextButton;
+            }
         }
     
-        if (nextSongButton.inside(touch.x, touch.y)) {
-            bNextButton = !bNextButton;
+        //glitch
+        for(int i=0;i<Num_Shaders;i++){
+            if(Pattern[effectNumber][i] == 1)
+                effectShaders.setShaderOn(i);
         }
+
+        
+        
+        
     }
-    
 
 }
 
@@ -322,6 +432,23 @@ void arApp::touchMoved(ofTouchEventArgs & touch){
 
 //--------------------------------------------------------------
 void arApp::touchUp(ofTouchEventArgs & touch){
+    
+    if(appState==0){
+        appState=1;
+    }
+    if(appState==1){
+        //glitch
+        for(int i=0;i<Num_Shaders;i++){
+            
+            if(Pattern[effectNumber][i] == 1)
+                effectShaders.setShaderOff(i);
+            
+        }
+        
+        effectNumber ++;
+        if(effectNumber >= Num_Pattern)
+            effectNumber = 0;
+    }
 
 }
 
@@ -356,7 +483,9 @@ void arApp::deviceOrientationChanged(int newOrientation){
 }
 //--------------------------------------------------------------
 void arApp::audioOut(float * output, int bufferSize, int nChannels) {
-    //audio output
-    musicMan.audioOut(output,bufferSize,nChannels,orbTracker.getDetectedImgNumber());
-
+    
+    if(appState==1){
+        //audio output
+        musicMan.audioOut(output,bufferSize,nChannels,orbTracker.getDetectedImgNumber());
+    }
 }

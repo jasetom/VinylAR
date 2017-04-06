@@ -20,6 +20,7 @@ public:
     void play(bool play);
     void analyseSound();
     void calculatePitchHistogram();
+    bool isBeatDetected();
     void nextSong();
     void prevSong();
     void firstDetect();
@@ -66,6 +67,13 @@ private:
     double wave,sample, ifftVal;
     maxiMix mymix;
     maxiOsc osc;
+    
+    //spectralFlux for beat detection
+    vector <float> prevFFT;
+    float specFlux;
+    int waitTime;
+    float threshold;
+    bool beatDetected;
     
     ofxMaxiFFTOctaveAnalyzer oct;
     int nAverages;
