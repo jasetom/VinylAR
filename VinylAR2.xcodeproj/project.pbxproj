@@ -64,7 +64,8 @@
 		E29527D01E96C62F0099631B /* swell.vert in Resources */ = {isa = PBXBuildFile; fileRef = E29527851E96C62F0099631B /* swell.vert */; };
 		E29527D11E96C62F0099631B /* twist.frag in Resources */ = {isa = PBXBuildFile; fileRef = E29527861E96C62F0099631B /* twist.frag */; };
 		E29527D21E96C62F0099631B /* twist.vert in Resources */ = {isa = PBXBuildFile; fileRef = E29527871E96C62F0099631B /* twist.vert */; };
-		E29527D31E96C62F0099631B /* ofxiOSPostGlitch.mm in Sources */ = {isa = PBXBuildFile; fileRef = E295278A1E96C62F0099631B /* ofxiOSPostGlitch.mm */; };
+		E2ADCFFC1E9CE50400397C7B /* arGui.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E2ADCFFA1E9CE50400397C7B /* arGui.cpp */; };
+		E2ADCFFF1E9E3B5D00397C7B /* ofxiOSPostGlitch.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E2ADCFFD1E9E3B5D00397C7B /* ofxiOSPostGlitch.cpp */; };
 		E2C87DD91E49E79F003035BB /* arAppViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = E2C87DCC1E49E79F003035BB /* arAppViewController.mm */; };
 		E2C87DDA1E49E79F003035BB /* MyAppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = E2C87DCF1E49E79F003035BB /* MyAppDelegate.mm */; };
 		E2C87DDB1E49E79F003035BB /* MyAppViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = E2C87DD11E49E79F003035BB /* MyAppViewController.mm */; };
@@ -316,8 +317,10 @@
 		E29527851E96C62F0099631B /* swell.vert */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = swell.vert; sourceTree = "<group>"; };
 		E29527861E96C62F0099631B /* twist.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = twist.frag; sourceTree = "<group>"; };
 		E29527871E96C62F0099631B /* twist.vert */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = twist.vert; sourceTree = "<group>"; };
-		E29527891E96C62F0099631B /* ofxiOSPostGlitch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxiOSPostGlitch.h; sourceTree = "<group>"; };
-		E295278A1E96C62F0099631B /* ofxiOSPostGlitch.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ofxiOSPostGlitch.mm; sourceTree = "<group>"; };
+		E2ADCFFA1E9CE50400397C7B /* arGui.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = arGui.cpp; sourceTree = "<group>"; };
+		E2ADCFFB1E9CE50400397C7B /* arGui.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = arGui.hpp; sourceTree = "<group>"; };
+		E2ADCFFD1E9E3B5D00397C7B /* ofxiOSPostGlitch.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxiOSPostGlitch.cpp; sourceTree = "<group>"; };
+		E2ADCFFE1E9E3B5D00397C7B /* ofxiOSPostGlitch.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = ofxiOSPostGlitch.hpp; sourceTree = "<group>"; };
 		E2C87DCB1E49E79F003035BB /* arAppViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = arAppViewController.h; sourceTree = "<group>"; };
 		E2C87DCC1E49E79F003035BB /* arAppViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = arAppViewController.mm; sourceTree = "<group>"; };
 		E2C87DCE1E49E79F003035BB /* MyAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyAppDelegate.h; sourceTree = "<group>"; };
@@ -942,8 +945,8 @@
 		E29527881E96C62F0099631B /* src */ = {
 			isa = PBXGroup;
 			children = (
-				E29527891E96C62F0099631B /* ofxiOSPostGlitch.h */,
-				E295278A1E96C62F0099631B /* ofxiOSPostGlitch.mm */,
+				E2ADCFFD1E9E3B5D00397C7B /* ofxiOSPostGlitch.cpp */,
+				E2ADCFFE1E9E3B5D00397C7B /* ofxiOSPostGlitch.hpp */,
 			);
 			path = src;
 			sourceTree = "<group>";
@@ -1031,6 +1034,8 @@
 				E29125AD1E560C5700950261 /* OrbTracker.hpp */,
 				E2E98CBF1E66EF1A00522005 /* OpticalFlowTracker.cpp */,
 				E2E98CC01E66EF1A00522005 /* OpticalFlowTracker.hpp */,
+				E2ADCFFA1E9CE50400397C7B /* arGui.cpp */,
+				E2ADCFFB1E9CE50400397C7B /* arGui.hpp */,
 				E4D8936D11527B74007E1F53 /* arApp.mm */,
 				E4D8936C11527B74007E1F53 /* arApp.h */,
 				E29526871E94F2640099631B /* VisualsManager.cpp */,
@@ -1202,11 +1207,11 @@
 				E2E98CE21E688D5900522005 /* maxiMFCC.cpp in Sources */,
 				E29125AE1E560C5700950261 /* OrbTracker.cpp in Sources */,
 				E2C87DDB1E49E79F003035BB /* MyAppViewController.mm in Sources */,
-				E29527D31E96C62F0099631B /* ofxiOSPostGlitch.mm in Sources */,
 				E4D8936E11527B74007E1F53 /* main.mm in Sources */,
 				E4D8936F11527B74007E1F53 /* arApp.mm in Sources */,
 				E2C87DD91E49E79F003035BB /* arAppViewController.mm in Sources */,
 				250A95BA26587BE85DB0A353 /* ofxCvColorImage.cpp in Sources */,
+				E2ADCFFF1E9E3B5D00397C7B /* ofxiOSPostGlitch.cpp in Sources */,
 				E2E98CDF1E688D5900522005 /* maxiBark.cpp in Sources */,
 				1D5F3298C2FA073628012944 /* ofxCvContourFinder.cpp in Sources */,
 				E2E98CDE1E688D5900522005 /* maxiAtoms.cpp in Sources */,
@@ -1221,6 +1226,7 @@
 				FB09C6B2A1DA0EA217240CB8 /* ofxCvGrayscaleImage.cpp in Sources */,
 				E2C87DDA1E49E79F003035BB /* MyAppDelegate.mm in Sources */,
 				E2E98CC11E66EF1A00522005 /* OpticalFlowTracker.cpp in Sources */,
+				E2ADCFFC1E9CE50400397C7B /* arGui.cpp in Sources */,
 				E212C821D1064B92DD953A42 /* ofxCvHaarFinder.cpp in Sources */,
 				63020F16C7E8DED980111241 /* ofxCvImage.cpp in Sources */,
 				E2E98CE01E688D5900522005 /* maxiFFT.cpp in Sources */,

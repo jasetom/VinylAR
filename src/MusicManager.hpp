@@ -16,11 +16,11 @@ class MusicManager {
 public:
     void setup();
     void update(int imgId);
-    void audioOut(float * output, int bufferSize, int nChannels,int imgId); //audio output function
+    void audioOut(float * output, int bufferSize, int nChannels); //audio output function
     void play(bool play);
     void analyseSound();
     void calculatePitchHistogram();
-    bool isBeatDetected();
+    bool detectBeat();
     void nextSong();
     void prevSong();
     void firstDetect();
@@ -39,6 +39,7 @@ public:
     float getOctaveAvg(int i);
     float getPitchHistogram(int i);
     float getMelBands(int i);
+    bool getIsBeatDetected();
     
     
     string getAlbumSongNames();

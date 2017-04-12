@@ -27,6 +27,8 @@ void OpticalFlowTracker::setup(int cam_w, int cam_h){
     flag = 0;
     //boolean which specifies to run certain parts of the code only once.
     once = true;
+    sideNo=0;
+
     
 }
 
@@ -40,9 +42,10 @@ void OpticalFlowTracker::updateFlowImage(unsigned char* pix, vector<cv::Point2f>
     //make it grayscale
     currentImgGray = currentImgColor;
     //apply some effects, so it would be easier to track
-    currentImgGray.blurGaussian(5);
-    currentImgGray.threshold(75);
+    currentImgGray.blurGaussian(11);
+    currentImgGray.threshold(100);
     currentImgGray.blurGaussian(1);
+    
     
     //convert image to cv mat
     currentImgGrayMat = cv::cvarrToMat(currentImgGray.getCvImage());
@@ -117,7 +120,6 @@ void OpticalFlowTracker::trackFlowKeyPoints(vector<cv::Point2f> keyPoints){
 }
 
 //-----------------------------------------------------
-
 void OpticalFlowTracker::drawHomography(){
     
     if(!points_nextPoints.empty()){
@@ -145,7 +147,6 @@ void OpticalFlowTracker::drawHomography(){
 }
 
 //-----------------------------------------------------
-
 void OpticalFlowTracker::calcMidPoint(vector<cv::Point2f> boundariesPoints){
     //we take boundaries points and calculate center point, as well as scale which could be used later on in drawing.
     for(int i=0; i<boundariesPoints.size(); i++){
@@ -157,29 +158,46 @@ void OpticalFlowTracker::calcMidPoint(vector<cv::Point2f> boundariesPoints){
 }
 
 //-----------------------------------------------------
-
 bool OpticalFlowTracker::trackingPointsVisible(){
     
-//as our camera width and height is bigger than the screen, we can track a few pixels above the screen width and height
-        for(int i=0; i<points_nextPoints.size(); i++){
-            
-//            80,36,ofGetWidth(),ofGetHeight()
-            
-            if(points_nextPoints[i].x < 60 || points_nextPoints[i].x > ofGetWidth()+100 ||
-            points_nextPoints[i].y < 16 || points_nextPoints[i].y > ofGetHeight()+100){
-                return false;
-            }
+    sideNo =0;
 
+//as our camera width and height is bigger than the screen, we can track a few pixels above the screen width and height
+    for(int i=0; i<points_nextPoints.size(); i++){
+            
+        if(points_nextPoints[i].x < 65){
+            sideNo=1;
         }
-    
+            
+        if(points_nextPoints[i].x > ofGetWidth()+100){
+            sideNo=2;
+        }
+            
+        if(points_nextPoints[i].y < 10){
+            sideNo=3;
+        }
+            
+        if(points_nextPoints[i].y > ofGetHeight()+95){
+            sideNo=4;
+        }
+            
+            
+        if(points_nextPoints[i].x < 40 || points_nextPoints[i].x > ofGetWidth()+150 ||
+        points_nextPoints[i].y < 0 || points_nextPoints[i].y > ofGetHeight()+110){
+            return false;
+        }
+    }
     return true;
 }
 
-
-
 //  Getters
-//-----------------------------------------------------
 
+//-----------------------------------------------------
+int OpticalFlowTracker::getWarning(){
+    return sideNo;
+}
+
+//-----------------------------------------------------
 vector<cv::Point2f> OpticalFlowTracker::getNextPoints(){
     return points_nextPoints;
 }

@@ -26,8 +26,8 @@ class OrbTracker {
 public:
     
     OrbTracker();
-    ~OrbTracker();
     
+    void setup();
     void draw();
     void drawFeatures();
     void drawDescriptors();
@@ -58,6 +58,7 @@ public:
     int getGoodMatchesSize();
     
 private:
+    ofImage markerImg;
     float minMatches;
     int detectedImgNumber;
     int nFeatures;

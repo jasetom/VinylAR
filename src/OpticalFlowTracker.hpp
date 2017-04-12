@@ -26,6 +26,8 @@ public:
     
     bool trackingPointsVisible();
     
+    int getWarning();
+    
     //getters
     ofVec2f getMiddlePoint();
     vector<cv::Point2f> getNextPoints();
@@ -58,6 +60,7 @@ private:
     int inputHeight;
     
     bool once;
+    int sideNo;
     
     //middle point coordinates
     int cntrX;

@@ -125,6 +125,7 @@ void MusicManager::update(int imgId){
             }
         }
         
+        
         if(currentSong==1 && swapSong){
             samp = samp1;
         }else if(currentSong==2 && swapSong){
@@ -260,49 +261,84 @@ void MusicManager::draw(int xPos, int yPos){
 
 
 //-----------------------------------------------------
-void MusicManager::audioOut(float * output, int bufferSize, int nChannels, int imgId){
-    float sumRms;
+void MusicManager::audioOut(float * output, int bufferSize, int nChannels){
+  //  float sumRms;
     
+    
+
     //check detected images id, if its 0, don't play anything.
-    if(detectedImgId!=0){
+    
+//    for (int i = 0; i < bufferSize; i++){
+//        output[i] = 0.0;
+//    }
+    
+    
+   // if(detectedImgId!=0){
         
-        //audio output forloop.
+        
+        
+        
+        
         for (int i = 0; i < bufferSize; i++){
-            
-            
-            //check wheter to play sound. Plays only when the AR marker is detected as this variable is triggered then.
+            //check wheter to play sound. Plays only when the AR marker is detected.
             if(playSound == true){
                 
-                //start playing  loaded sample
+                //play sound
                 playingSound = samp.play();
                 
-                //process sound using fft
+                //process sound and convert magnitudes to decibels in the mfft.
                 if (mfft.process(playingSound)) {
                     //call this function to do more sound analysis
                     analyseSound();
                 }
-                
+                //volume
                 //set output to left and right channels, also we can set volume here too
                 lAudio[i] = output[i * nChannels] = playingSound;// * 0.0;
                 rAudio[i] = output[i * nChannels + 1] = playingSound;//* 0.0;
                 
-                //we calculate rms here by adding up the outputs
-                sumRms = output[i * nChannels] * output[i * nChannels + 1];
-                //and then square rooting the sum
-                rms = sqrt(sumRms);
-                
-
-                
-            }else if(playSound==false){
-                samp.reset();
-                playingSound=0;
-
-                //if playingSound false, set output to zero.
-                lAudio[i] = output[i * nChannels] = 0;
-                rAudio[i] = output[i * nChannels + 1] = 0;
+            }else{
+                //if not playing set output to zero.
+                lAudio[i] = output[i * nChannels] = playingSound * 0.0;
+                rAudio[i] = output[i * nChannels + 1] = playingSound * 0.0;
             }
         }
-    }
+
+  //  }
+    
+        
+        
+        
+        
+        
+        
+        
+        
+//        //check wheter to play sound. Plays only when the AR marker is detected as this variable is triggered then.
+//        if(playSound == true){
+//
+//            //audio output forloop.
+//            for (int i = 0; i < bufferSize; i++){
+//                
+//                //start playing  loaded sample
+//                playingSound = samp.play();
+//            
+//                //process sound using fft
+//                if (mfft.process(playingSound)) {
+//                    //call this function to do more sound analysis
+//                    analyseSound();
+//                }
+//                
+//                //set output to left and right channels, also we can set volume here too
+//                output[i * nChannels] = playingSound;// * 0.0;
+//                output[i * nChannels + 1] = playingSound;//* 0.0;
+//                
+//                //we calculate rms here by adding up the outputs
+//                sumRms = output[i * nChannels] * output[i * nChannels + 1];
+//                //and then square rooting the sum
+//                rms = sqrt(sumRms);
+//            }
+//        }
+//    }
 }
 
 //-----------------------------------------------------
@@ -338,7 +374,8 @@ void MusicManager::analyseSound(){
     //calculate pitchHistogram
     calculatePitchHistogram();
     
-    cout << "isBeat: " << isBeatDetected() << endl;
+    //detect beats
+    detectBeat();
 }
 
 //-----------------------------------------------------
@@ -355,7 +392,7 @@ void MusicManager::calculatePitchHistogram(){
 
 
 //-----------------------------------------------------
-bool MusicManager::isBeatDetected(){
+bool MusicManager::detectBeat(){
     
     //simple beat detection using spectral fluxuation
     //adapted from Report of Mark Woulfe - http://doc.gold.ac.uk/~ma901mw/Year%203%20Project/Final%20Report/Report.pdf page 17
@@ -403,10 +440,11 @@ bool MusicManager::isBeatDetected(){
         beatDetected = false;
         return false;
     }
-    
+}
 
-    
-    
+//-----------------------------------------------------
+bool MusicManager::getIsBeatDetected(){
+    return beatDetected;
 }
 
 //-----------------------------------------------------

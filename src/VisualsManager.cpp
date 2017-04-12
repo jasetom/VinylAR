@@ -7,16 +7,31 @@
 //
 
 #include "VisualsManager.hpp"
+#include "ofxiOSPostGlitch.hpp"
+
 
 //-----------------------------------------------------
 void VisualsManager::setup(){
     
+    setupShaders();
     setupManyBoxes();
     setupIcoSphere();
     setupCone();
     setupSmallCubes();
     setupSphereAndCones();
     setupCylinders();
+    
+    
+}
+
+//----------------------------------------------------
+void VisualsManager::setupShaders(){
+    
+    //glitch
+    myFbo.allocate(ofGetScreenWidth()+80, ofGetScreenHeight()+36);
+    effectShaders.setupFBO(&myFbo);
+    effectNumber = 0;
+    
     
 }
 
@@ -113,9 +128,24 @@ void VisualsManager::setupBoxesV3(){
 //--- Update functions
 
 //-----------------------------------------------------
-void VisualsManager::update(){
+void VisualsManager::update(bool isPlaying, int posX, int posY, int posZ, int scale){
     
     updateBoxesV3();
+    
+    ///everything we put in here will be affected by effect shaders
+    myFbo.begin();
+    ofClear(0,0,0,0);
+    ofSetColor(0,200,100);
+//    ofDrawRectangle(0, 0, myFbo.getWidth(), myFbo.getHeight());
+    
+    if(isPlaying){
+        draw(posX, posY, posZ, scale);
+    }
+    
+    myFbo.end();
+    
+    effectShaders.update(&myFbo);
+    
 }
 
 //-----------------------------------------------------
@@ -140,13 +170,69 @@ void VisualsManager::updateBoxesV3(){
 
 //-----------------------------------------------------
 void VisualsManager::draw(int posX, int posY, int posZ, int scale){
+    globalPosX = posX;
+    globalPosY = posY;
+    globalPosZ = posZ;
+    globalScale = scale;
+    
+    ofSetColor(255);
+
+    cout << "rms: " << RMS;
+    cout << ", spFlat: " << specFlatness;
+    cout << ", spCentr: " << specCentroid;
+    cout << ", pkFrq: "  << peakFreq;
+    cout << ", isBeat: "  << isBeat <<endl;
+//    cout << "rms: " << RMS <<endl;
+
+    
+//    drawManyBoxes(100.0,200.0,300.0);
+    //drawIcoSphere(100,100);
+    //drawCone(100,100);
+    
+
+    if(isBeat){
+        effectShaders.setShaderOn(4);
+
+    drawSmallCubes(RMS, 300);
+    }else{
+        effectShaders.setShaderOn(3);
+        drawSmallCubes(RMS, 300);
+
+    }
+    
+    //drawSphereAndCones(100, 100);
+    //drawCylinders(100, 100);
+   // drawBoxesV3(100, 100);
+    
+    
+    
+    
+    //glitch
+    //        for(int i=0;i<Num_Shaders;i++){
+    //
+    //            if(Pattern[effectNumber][i] == 1)
+    //                effectShaders.setShaderOff(i);
+    //
+    //        }
+    //
+    //        effectNumber ++;
+    //        if(effectNumber >= Num_Pattern)
+    //            effectNumber = 0;
+    
 
     
 }
 
 
 //-----------------------------------------------------
-void VisualsManager::drawManyBoxes(int posX, int posY, float param1, float param2, float param3){
+void VisualsManager::drawFbo(){
+    effectShaders.draw(0,0);
+
+}
+
+
+//-----------------------------------------------------
+void VisualsManager::drawManyBoxes(float param1, float param2, float param3){
     
 //    cout << "visualsManager RMS: " << RMS <<endl;
 
@@ -163,7 +249,7 @@ void VisualsManager::drawManyBoxes(int posX, int posY, float param1, float param
     float spacing = 1;
     int boxCount = 100;
     
-    ofTranslate(posX,posY);
+    ofTranslate(globalPosX,globalPosY);
 //    ofTranslate(ofGetWidth()/2, ofGetHeight()/2);
     
     for(int i = 0; i < boxCount; i++) {
@@ -197,12 +283,12 @@ void VisualsManager::drawManyBoxes(int posX, int posY, float param1, float param
 }
 
 //-----------------------------------------------------
-void VisualsManager::drawIcoSphere(int posX, int posY, int posZ, float param1,float param2){
+void VisualsManager::drawIcoSphere(float param1,float param2){
     
     icoSphereMode = 1;
     ofSetColor(100);
     
-    icoSphere.setPosition(posX, posY,posZ);
+    icoSphere.setPosition(globalPosX, globalPosY,globalPosZ);
     
     icoSphere.rotate(abs(param1/100), 1.0, 0.0, 0.0);
     
@@ -218,7 +304,7 @@ void VisualsManager::drawIcoSphere(int posX, int posY, int posZ, float param1,fl
 //        float angle = (ofGetElapsedTimef() * 1.4);
         ofVec3f faceNormal;
         for(size_t i = 0; i < triangles.size(); i++ ) {
-            float frc = ofSignedNoise(param2/100* (float)i * .1, 11*.05) * 4;
+            float frc = ofSignedNoise(100* (float)i * .1, 11*.05) * 4;
             faceNormal = triangles[i].getFaceNormal();
             for(int j = 0; j < 3; j++ ) {
                 triangles[i].setVertex(j, triangles[i].getVertex(j) + faceNormal * frc );
@@ -233,10 +319,10 @@ void VisualsManager::drawIcoSphere(int posX, int posY, int posZ, float param1,fl
 
 //-----------------------------------------------------
 
-void VisualsManager::drawCone(int posX, int posY, int posZ, float param1, float param2){
+void VisualsManager::drawCone(float param1, float param2){
    
     coneMode =0;
-    cone.setPosition(posX, posY, posZ);
+    cone.setPosition(globalPosX, globalPosY, globalPosZ);
 
     ofSetColor(255,0,0);
     
@@ -261,9 +347,9 @@ void VisualsManager::drawCone(int posX, int posY, int posZ, float param1, float 
 }
 
 //-----------------------------------------------------
-void VisualsManager::drawSmallCubes(int posX, int posY, int posZ, float param1, float param2){
+void VisualsManager::drawSmallCubes(float param1, float param2){
 
-    cube.setPosition(posX,posY,posZ);
+    cube.setPosition(globalPosX,globalPosY,globalPosZ);
 
     ofSetColor(144);
     cube.draw();
@@ -275,7 +361,9 @@ void VisualsManager::drawSmallCubes(int posX, int posY, int posZ, float param1, 
     cube.rotate(angle/100, angle/100, 0, 0);
 
     //drawing biggest cube
+    if(param1 > 0.3){
     cube.drawWireframe();
+    }
     //drawing small cubes
     positionAndDrawCubes(cube,smallCubes);
     ofSetColor(255,0,0);
@@ -283,11 +371,11 @@ void VisualsManager::drawSmallCubes(int posX, int posY, int posZ, float param1, 
 }
 
 //-----------------------------------------------------
-void VisualsManager::drawSphereAndCones(int posX, int posY, int posZ, float param1, float param2){
+void VisualsManager::drawSphereAndCones(float param1, float param2){
 
     ofSetColor(0);
 
-    sphere.setPosition(posX, posY,posZ);
+    sphere.setPosition(globalPosX, globalPosY,globalPosZ);
 
     sphere.drawWireframe();
 
@@ -304,14 +392,14 @@ void VisualsManager::drawSphereAndCones(int posX, int posY, int posZ, float para
 }
 
 //-----------------------------------------------------
-void VisualsManager::drawCylinders(int posX, int posY, int posZ, float param1, float param2){
+void VisualsManager::drawCylinders(float param1, float param2){
 
     for(int i = 0; i < cylinders.size(); i++){
         int x = cos(i)*100;
         int z = sin(i)*100;
         
         cylinders[i].set(20, 50);
-        cylinders[i].setPosition(posX+x, posY+z,posZ);
+        cylinders[i].setPosition(globalPosX+x, globalPosY+z,globalPosZ);
     }
 
     
@@ -367,7 +455,7 @@ void VisualsManager::drawCylinders(int posX, int posY, int posZ, float param1, f
     
     
 //-----------------------------------------------------
-void VisualsManager::drawBoxesV3(int posX, int posY, int posZ, float param1, float param2){
+void VisualsManager::drawBoxesV3(float param1, float param2){
     
     
     // Box //
@@ -377,7 +465,7 @@ void VisualsManager::drawBoxesV3(int posX, int posY, int posZ, float param1, flo
     for(int i = 0; i < boxesV3.size(); i++){
         int x = cos(i)*10;
         int z = sin(i)*10;
-        boxesV3[i].setPosition(posX+x, posY+z,posZ);
+        boxesV3[i].setPosition(globalPosX+x, globalPosY+z,globalPosZ);
         
     }
     
@@ -479,3 +567,8 @@ void VisualsManager::setPitchHistogram(float ph){
 void VisualsManager::setMelBands(float mb){
     melBands = mb;
 };
+
+//-----------------------------------------------------
+void VisualsManager::setIsBeat(bool beat){
+    isBeat = beat;
+}

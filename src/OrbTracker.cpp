@@ -34,8 +34,65 @@ OrbTracker::OrbTracker(){
     matcher = BFMatcher(NORM_HAMMING, false);
 }
 
-//reference to constructor
-OrbTracker::~OrbTracker(){
+void OrbTracker::setup(){
+    
+    //load up images, resize if needed and analyse them using analyseImage() function.
+    //all this is done manually for 5 images with the code below: 
+    
+    ////OrbTracker 0 pebbles
+    //load up tracker image and analyse it
+    markerImg.load(ofToDataPath("images/1.jpg"));
+    markerImg.resize(markerImg.getWidth()/2,markerImg.getHeight()/2);
+    //analyse image to get its features
+    analyseImage(markerImg);
+    
+    ////OrbTracker 1 deer
+    //load up tracker image and analyse it
+    markerImg.load(ofToDataPath("images/2.jpg"));
+    markerImg.resize(markerImg.getWidth()/2,markerImg.getHeight()/2);
+    //analyse image to get its features
+    analyseImage(markerImg);
+    
+    ////OrbTracker 2 man
+    //load up tracker image and analyse it
+    markerImg.load(ofToDataPath("images/3.jpg"));
+    markerImg.resize(markerImg.getWidth()/2,markerImg.getHeight()/2);
+    //analyse image to get its features
+    analyseImage(markerImg);
+    
+    ////OrbTracker 3 wall
+    //load up tracker image and analyse it
+    markerImg.load(ofToDataPath("images/4.jpg"));
+    markerImg.resize(markerImg.getWidth()/2,markerImg.getHeight()/2);
+    //analyse image to get its features
+    analyseImage(markerImg);
+    
+    ////OrbTracker 4 traintracks
+    //load up tracker image and analyse it
+    markerImg.load(ofToDataPath("images/5.jpg"));
+    markerImg.resize(markerImg.getWidth()/2,markerImg.getHeight()/2);
+    //analyse image to get its features
+    analyseImage(markerImg);
+    
+    ////OrbTracker 5 roof
+    //load up tracker image and analyse it
+    markerImg.load(ofToDataPath("images/6.jpg"));
+    markerImg.resize(markerImg.getWidth()/2,markerImg.getHeight()/2);
+    //analyse image to get its features
+    analyseImage(markerImg);
+    
+    ////OrbTracker 6 car
+    //load up tracker image and analyse it
+    markerImg.load(ofToDataPath("images/7.jpg"));
+    markerImg.resize(markerImg.getWidth()/2,markerImg.getHeight()/2);
+    //analyse image to get its features
+    analyseImage(markerImg);
+    
+    //once we analyse all of the images we train our matcher with descriptors
+    trainMatches(getManyImgDescriptors());
+
+    
+    
 }
 
 //-----------------------------------------------------
