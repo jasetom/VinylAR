@@ -1,274 +1,201 @@
 //
 // Created by Tomas Jasevicius
+// VinylARt
 //
-
+// This file is the most important part of the project.
+// Most of the interactions between different objects are happening here.
 
 #include "arApp.h"
 
 //--------------------------------------------------------------
 void arApp::setup(){
-    
-    CGSize ARViewBoundsSize = CGSizeZero;
-    UIInterfaceOrientation ARViewOrientation = UIInterfaceOrientationUnknown;
-    
-    ARViewBoundsSize.width = [[UIScreen mainScreen] bounds].size.width;
-    ARViewBoundsSize.height = [[UIScreen mainScreen] bounds].size.height;
-    ARViewOrientation = UIInterfaceOrientationPortrait;
-
+    //Initial setup for the programm
+    //we use this to keep track the state of the application
+    appState = 0;
+    //aliasing and smoothing
     ofEnableAntiAliasing();
     ofEnableSmoothing();
-    
-    
-    //basic setup for programm
+    //innitialise camera feed
+
     vidGrabber.initGrabber(640,480);
+
+    //vertical sync on, framerate 60fps
     ofSetVerticalSync(true);
     ofSetFrameRate(60);
-     
     
-    ////OrbTracker 0 pebbles
-    //load up tracker image and analyse it
-    markerImg.load(ofToDataPath("images/1.jpg"));
-    markerImg.resize(markerImg.getWidth()/2,markerImg.getHeight()/2);
-    //analyse image to get its features
-    orbTracker.analyseImage(markerImg);
+    ////OrbTracker setup
+    orbTracker.setup();
     
-    ////OrbTracker 1 deer
-    //load up tracker image and analyse it
-    markerImg.load(ofToDataPath("images/2.jpg"));
-    markerImg.resize(markerImg.getWidth()/2,markerImg.getHeight()/2);
-    //analyse image to get its features
-    orbTracker.analyseImage(markerImg);
-    
-    ////OrbTracker 2 man
-    //load up tracker image and analyse it
-    markerImg.load(ofToDataPath("images/3.jpg"));
-    markerImg.resize(markerImg.getWidth()/2,markerImg.getHeight()/2);
-    //analyse image to get its features
-    orbTracker.analyseImage(markerImg);
-    
-    ////OrbTracker 3 wall
-    //load up tracker image and analyse it
-    markerImg.load(ofToDataPath("images/4.jpg"));
-    markerImg.resize(markerImg.getWidth()/2,markerImg.getHeight()/2);
-    //analyse image to get its features
-    orbTracker.analyseImage(markerImg);
-    
-    ////OrbTracker 4 traintracks
-    //load up tracker image and analyse it
-    markerImg.load(ofToDataPath("images/5.jpg"));
-    markerImg.resize(markerImg.getWidth()/2,markerImg.getHeight()/2);
-    //analyse image to get its features
-    orbTracker.analyseImage(markerImg);
-    
-    ////OrbTracker 5 roof
-    //load up tracker image and analyse it
-    markerImg.load(ofToDataPath("images/6.jpg"));
-    markerImg.resize(markerImg.getWidth()/2,markerImg.getHeight()/2);
-    //analyse image to get its features
-    orbTracker.analyseImage(markerImg);
-    
-    ////OrbTracker 6 car
-    //load up tracker image and analyse it
-    markerImg.load(ofToDataPath("images/7.jpg"));
-    markerImg.resize(markerImg.getWidth()/2,markerImg.getHeight()/2);
-    //analyse image to get its features
-    orbTracker.analyseImage(markerImg);
-
-    //once we analyse all of the images we train our matcher with descriptors
-    orbTracker.trainMatches(orbTracker.getManyImgDescriptors());
-
-    
-    ////OpticalFlowTracker
+    ////OpticalFlowTracker setup
     opticalFlow.setup(vidGrabber.getWidth(),vidGrabber.getHeight());
     
     ////Sound setup
-    //setup Music Manager
     musicMan.setup();
+    
+    ////Gui setup
+    gui.setup();
 
-    //left and right audio output sizes
-    initialBufferSize = 512;
-    lAudio = new float[initialBufferSize];
-    rAudio = new float[initialBufferSize];
-    
-    detectButton.set(ofGetScreenWidth()/2, 510);
-    detectBtnRadius = 40;
-    bDetectButton = false;
-    
-    nextSongButton.set(240, 510, 50, 50);
-    bNextButton = false;
-    
-    prevSongButton.set(30, 510, 50, 50);
-    bPrevButton = false;
-    
+    ////Visuals setup
+    vizMan.setup();
 }
 
 //--------------------------------------------------------------
 void arApp::update(){
     
+    //if appState=1 this means that we are in the main state of the app
+    if(appState==1){
+    //update video feed
     vidGrabber.update();
+    //when we recieve new frame from camera feed, do the following
     if(vidGrabber.isFrameNew()){
-        
-        //we tap screen and this all happens.
+        //if detect button has been pressed, orbMagic becomes true run orbTracker.
         if(orbMagic==true){
             //if we dont have any boundaries yet, we run the detection function
             if(orbTracker.getBoundariesKeyPoints().size()<3){
+                //take pixels from the camera and try to detect pre-analysed images in the camera feed.
                 orbTracker.detect(vidGrabber.getPixels().getData(),vidGrabber.getWidth(),vidGrabber.getHeight());
             }else{
-                //once we have more than 3 keypoints in boundaries we move to optical flow tracking
+                //once we have more than 3 keypoints in boundaries, that means that we have detected an image
+                //therefore we can move to optical flow tracking
                 flow = true;
             }
-            
+            //if match() function returns more than 1 mateches, we create homography - essentiallty boundaries around the matched image.
             if(orbTracker.match()>1){
             //we create homography with detected img number. we do -1 as to access correct vectors for the images
                 orbTracker.createHomography(orbTracker.getImgKeyPoints(orbTracker.getDetectedImgNumber()-1),orbTracker.getImgBoundaries(orbTracker.getDetectedImgNumber()-1));
-                
                 //we call firstDetect function in music player to change some variables
                 musicMan.firstDetect();
-                
             }
         }
-        
+        //once we have more than 3 keypoints to track we run flow tracker algorithm
         if(flow==true){
             //when we have 4 points in boundaries we pass them to optical flow function for easy tracking
             opticalFlow.updateFlowImage(vidGrabber.getPixels().getData(),orbTracker.getBoundariesKeyPoints(),orbMagic);
             //disabling detection/tracking/matching from orbTracker
             orbMagic = false;
-            musicMan.play(true);
+        }
+    }
+    
+    //update music manager class with detected image number.
+    musicMan.update(orbTracker.getDetectedImgNumber());
+    
+        //check gui buttons to control variables/states
+        if(gui.detectButtonPressed()){
+            if(musicMan.isPlay()){
+                musicMan.play(false);
+                bPause=true;
+                gui.setbDetectButton();
+            }else{
+                bPause=false;
+            }
+                musicMan.play(false);
+                orbMagic =!orbMagic;
+                flow = false;
+                orbTracker.reset();
+                gui.setbDetectButton();
+        }
+        
+        
+        //sound control previous song button check
+        if(gui.prevButtonPressed()){
+            musicMan.prevSong();
+            gui.setbPrevButton();
+        }
+        //sound control next song button check
+        if(gui.nextButtonPressed()){
+            musicMan.nextSong();
+            gui.setbNextButton();
+        }
+
+    //update visuals manger with the position of point where we can draw visuals, as well as state of music manager.
+    vizMan.update(musicMan.isPlay(),opticalFlow.getMiddlePoint().x,opticalFlow.getMiddlePoint().y, 0, opticalFlow.getDrawingScalar());
+        
+        //if music starts playing, pass along extraced sound feature values to visuals manager class
+        if(musicMan.isPlay()){
+            
+            //If the music starts playing, we pass sound analysis variables to
+            //visuals class so that we could make them reactive to sound.
+            vizMan.setRMS(musicMan.getRms());
+            vizMan.setSpecFlatness(musicMan.getSpecFlatness());
+            vizMan.setSpecCentroid(musicMan.getSpecCentroid());
+            vizMan.setPeakFreq(musicMan.getPeakFreq());
+            vizMan.setIsBeat(musicMan.getIsBeatDetected());
+            vizMan.setFFT(*musicMan.getFFT());
+            vizMan.setMFCC(*musicMan.getMFCC());
+            vizMan.setFFTOcatveAnalyzer(*musicMan.getFFTOctaveAnalyzer());
+            
 
         }
     }
-    
-    musicMan.update(orbTracker.getDetectedImgNumber());
-    
-    
-    //check buttons
-    if (bDetectButton){
-        orbMagic =!orbMagic;
-        flow = false;
-        orbTracker.reset();
-        musicMan.play(false);
-        bDetectButton=!bDetectButton;
-    }
-    
-        if (bPrevButton){
-            musicMan.prevSong();
-            bPrevButton =!bPrevButton;
-        }
-        if (bNextButton){
-            musicMan.nextSong();
-            bNextButton=!bNextButton;
-        }
-    
-    
-    
-    
-    
 }
 
     
 
 
 //--------------------------------------------------------------
+//Main draw function of the application, this is where we draw landing screen, gui, and audio visualisations
 void arApp::draw(){
+    //appstate0 = landing screen when the app is first started.
+    if(appState==0){
+        gui.drawStartingScreen();
+    }
     
-    //iphone se size 568 x 320
-    //camera img size 640 x 480
-    //therefore we center it out using translate
+    //appstate1 = main part of the programm
+    if(appState==1){
+    
+    //iPhone se size 568 x 320, camera img size 640 x 480
+    //therefore we can center camera image with a small area being outside of visible screen.
     ofPushMatrix();
     ofTranslate(-80,-36);
 
     ofSetColor(255);
     vidGrabber.draw(0,0);
-    
-    ofSetColor(0);
-    ofDrawBitmapString(ofGetWidth(), 20, 20);
-    ofDrawBitmapString(ofGetHeight(), 20, 40);
-    
-    orbTracker.draw();
-    
-    //homography was here
-    
-    if(orbMagic){
-        ofSetColor(255,200,0);
-        ofSetLineWidth(7);
-        ofNoFill();
-        ofDrawRectangle(80,36,ofGetWidth(),ofGetHeight());
+        
+    //[debug] draw various features from orbTracker
+//    orbTracker.draw();
+
+    //we use this function to draw square around the perimeter of the screen when
+    //the user presses detect button so that they would know what is going on.
+    if(!bPause){
+        gui.drawDetectState(orbMagic);
     }
-    
-    //here we would draw sound
+    //here we draw the audio visuals if we get to the optical 'flow' state.
     if(flow){
-                
+        //first we check if tracking points from the image are visible
         if(opticalFlow.trackingPointsVisible()){
             
+            musicMan.play(true);
             
-            //draw op homography
-            opticalFlow.drawHomography();
+            //[debug]draw optical flow homography. type 1 draws line, type 2 draws spheres
+//            opticalFlow.drawHomography(1);
             
-            
-//            ofSetColor(0,255,0);
-//            ofSetLineWidth(7);
-//            ofNoFill();
-//            ofDrawRectangle(80,36,ofGetWidth(),ofGetHeight());
-            
-            if(orbTracker.getDetectedImgNumber()==1){
-                ofDrawBitmapString("Pebbles! "+ musicMan.getCurrentSongName(),opticalFlow.getMiddlePoint().x,opticalFlow.getMiddlePoint().y,10);
-                //                                ofDrawSphere(opticalFlow.getMiddlePoint().x,opticalFlow.getMiddlePoint().y,10,opticalFlow.getDrawingScalar());
-                
-                if(musicMan.isPlay()){
-                    //
-                    musicMan.draw(opticalFlow.getMiddlePoint().x,opticalFlow.getMiddlePoint().y);
-                    
-                }
+            //then we check if music manager plays the music,
+            //if so we draw the visuals using fbo coming from visuals manager.
+            if(musicMan.isPlay()){
+                ofPushMatrix();
+                ofSetColor(255);
+                vizMan.drawFbo();
+                ofSetColor(255);
+                ofPopMatrix();
             }
             
-            if(orbTracker.getDetectedImgNumber()==2){
-                ofDrawBitmapString("Man!",opticalFlow.getMiddlePoint().x,opticalFlow.getMiddlePoint().y,10);
-            }
-            if(orbTracker.getDetectedImgNumber()==3){
-                ofDrawBitmapString("Wall!",opticalFlow.getMiddlePoint().x,opticalFlow.getMiddlePoint().y,10);
-            }
-            if(orbTracker.getDetectedImgNumber()==4){
-                ofDrawBitmapString("Train tracks!",opticalFlow.getMiddlePoint().x,opticalFlow.getMiddlePoint().y,10);
-            }
-            if(orbTracker.getDetectedImgNumber()==5){
-                ofDrawBitmapString("Roof!",opticalFlow.getMiddlePoint().x,opticalFlow.getMiddlePoint().y,10);
-            }
-            if(orbTracker.getDetectedImgNumber()==6){
-                   ofDrawBitmapString("Car!",opticalFlow.getMiddlePoint().x,opticalFlow.getMiddlePoint().y,10);
-            }
-            
-        }else{
+        }else if(!opticalFlow.trackingPointsVisible()){
             musicMan.play(false);
         }
+    }
         
-        //preparation for visualisations implementation
-//        ofBeginShape();
-//        ofSetColor(255,133,133);
-//        ofFill();
-//        
-//        for(int i=0; i < fftSize / 8; i++) {
-//        
-//            ofSetColor(7*i,133,133);
-//            //place spheres in a circle using trig functions
-//            int x = cos(i)*100;
-//            int y = sin(i)*100;
-//            ofDrawSphere(x,y,150,5+mfft.magnitudes[i]*2);
-//        }
-//        ofEndShape();
-    }
-    
+    //closing popmatrix after centering out video on the screen
     ofPopMatrix();
-    //drawing gui on top of everything
-    ofSetColor(255);
-    ofNoFill();
-    ofSetLineWidth(2);
-    ofSetCircleResolution(1000);
-    ofDrawCircle(detectButton, detectBtnRadius);
-    if(musicMan.isPlay()){
-        ofDrawRectangle(prevSongButton);
-        ofDrawRectangle(nextSongButton);
+        
+        //drawing gui, while checking if the music is playing. if the boolean is true,
+        //we draw music control buttons and name of the album and music.
+        //we also pass the warning for tracking points to alert the user
+        //when/if the tracking points of the image are getting out of the sight
+        gui.draw(musicMan.isPlay(),musicMan.getCurrentSongName(),opticalFlow.getWarning(),orbTracker.getAlbumImage(orbTracker.getDetectedImgNumber()));
+        
+        //this is needed due to transparecy issues
+        ofSetColor(255,255);
     }
-   
 }
 
 //--------------------------------------------------------------
@@ -279,34 +206,46 @@ void arApp::exit(){
 //--------------------------------------------------------------
 void arApp::touchDown(ofTouchEventArgs & touch){
     
-    //checking locations of touch on the screen for the buttons
-    if (detectButton.distance(ofPoint(touch.x,touch.y)) < detectBtnRadius) {
-        bDetectButton = !bDetectButton;
-    }
+    //appState1 = main screen where we display camera feed and audio visuals
+    if(appState==1){
 
-    //check for buttons only when points are visible
-    if(opticalFlow.trackingPointsVisible()){
+        //checking locations of touch on the screen for the middle detect button
+        gui.checkDetectButton(touch);
 
-        if (prevSongButton.inside(touch.x, touch.y)) {
-            bPrevButton = !bPrevButton;
-        }
-    
-        if (nextSongButton.inside(touch.x, touch.y)) {
-            bNextButton = !bNextButton;
+        //check music control buttons only when tracking points are visible
+        if(opticalFlow.trackingPointsVisible()){
+            //checks if the music control buttons have been pressed
+            gui.checkMusicControls(touch);
         }
     }
-    
-
 }
 
 //--------------------------------------------------------------
 void arApp::touchMoved(ofTouchEventArgs & touch){
-    
+
 }
 
 //--------------------------------------------------------------
 void arApp::touchUp(ofTouchEventArgs & touch){
+    //appState0 = greeting menu screen
+    //appState1 = main screen where we display camera feed and audio visuals
+    //when we tap it goes to the main screen
+    if(appState==0){
 
+        //if application is in menu  state, check for menu controls
+        gui.checkMenuControls(touch);
+        
+        //if we get to the end of tutorial, check for the begin button location
+        if(gui.getCurrentScreen()==6||gui.getCurrentScreen()==0){
+            gui.checkBeginButton(touch);
+            
+            if(gui.beginButtonPressed()){
+                appState=1;
+            }
+            
+        }
+    }
+    
 }
 
 //--------------------------------------------------------------
@@ -338,9 +277,18 @@ void arApp::gotMemoryWarning(){
 void arApp::deviceOrientationChanged(int newOrientation){
 
 }
+
 //--------------------------------------------------------------
 void arApp::audioOut(float * output, int bufferSize, int nChannels) {
-    //audio output
-    musicMan.audioOut(output,bufferSize,nChannels,orbTracker.getDetectedImgNumber());
+    //if we are in the main appstate and we detect image, play the audio out.
+    if(appState==1){
+        //audio output comming from music manager class, it will play when the image has been detected.
+        musicMan.audioOut(output,bufferSize,nChannels);
 
+    }
+    
 }
+
+
+
+

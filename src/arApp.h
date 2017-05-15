@@ -1,5 +1,6 @@
 //
 // Created by Tomas Jasevicius
+// VinylARt
 //
 
 //screen size of iPhone5
@@ -12,10 +13,12 @@
 #include "OpticalFlowTracker.hpp"
 #include "ofxMaxim.h"
 #include "MusicManager.hpp"
-
+#include "VisualsManager.hpp"
+#include "arGui.hpp"
 
 class arApp : public ofxiOSApp {
 	
+    
     public:
         void setup();
         void update();
@@ -51,21 +54,19 @@ class arApp : public ofxiOSApp {
     /* Music player */
     MusicManager musicMan;
     double playingSound; //variable where we store data when sound is playing
-    
     int initialBufferSize;
     float * lAudio; //left audio output
     float * rAudio; //right audio output
     
     /* Basic GUI */
-    ofPoint detectButton;
-    bool bDetectButton;
-    int detectBtnRadius;
+    arGui gui;
+    bool bPause;
     
-    ofRectangle prevSongButton;
-    bool bPrevButton;
-    ofRectangle nextSongButton;
-    bool bNextButton;
-
+    /* Visuals Manager */
+    VisualsManager vizMan;
+    
+    /* Other variables */
+    int appState;
     
 
 

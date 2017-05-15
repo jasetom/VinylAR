@@ -5,12 +5,14 @@
   },
   "DVTSourceControlWorkspaceBlueprintWorkingCopyStatesKey" : {
     "EFDB30128985993E4204C861A6364A54603BEB5C" : 9223372036854775807,
-    "7987E4974CF048805F1CA9E9A39AFBF40C3E54F2" : 9223372036854775807
+    "7987E4974CF048805F1CA9E9A39AFBF40C3E54F2" : 9223372036854775807,
+    "AC89AD7186DB3BB1F6F2691D1B1B4F115B5536B0" : 9223372036854775807
   },
   "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "6EDA57F4-FA04-49AF-932E-BAEDFF5D12F3",
   "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
     "EFDB30128985993E4204C861A6364A54603BEB5C" : "VinylARv0_2\/",
-    "7987E4974CF048805F1CA9E9A39AFBF40C3E54F2" : "..\/..\/addons\/ofxSURFTracker"
+    "7987E4974CF048805F1CA9E9A39AFBF40C3E54F2" : "..\/..\/addons\/ofxSURFTracker",
+    "AC89AD7186DB3BB1F6F2691D1B1B4F115B5536B0" : "..\/..\/addons\/ofxiOSPostGlitch"
   },
   "DVTSourceControlWorkspaceBlueprintNameKey" : "VinylAR2",
   "DVTSourceControlWorkspaceBlueprintVersion" : 204,
@@ -20,6 +22,11 @@
       "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "github.com:jasetom\/ofxSURFTracker.git",
       "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
       "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "7987E4974CF048805F1CA9E9A39AFBF40C3E54F2"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "github.com:jasetom\/ofxiOSPostGlitchV2.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "AC89AD7186DB3BB1F6F2691D1B1B4F115B5536B0"
     },
     {
       "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "github.com:jasetom\/VinylAR.git",

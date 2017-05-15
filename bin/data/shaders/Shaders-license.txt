@@ -1,0 +1,4 @@
+Shaders License
+
+All of the shader files come from ofxIOSPostGlitch effect Addon on by Ryota Katoh:
+https://github.com/RyotaKatoh/ofxiOSPostGlitch
