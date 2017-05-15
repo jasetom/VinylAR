@@ -25,6 +25,7 @@
 		BBE5EAB80F49AD8400F28951 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BBE5EAB70F49AD8400F28951 /* AudioToolbox.framework */; };
 		BD2DC8B4CC2C2BC0DD128073 /* AssetsLibrary.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CF6F9415A1CDA4F93172643E /* AssetsLibrary.framework */; };
 		D3301F6A0B43BB293ED97C1D /* ofxCvShortImage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8A4DD23693DFAB8EC05FAA5D /* ofxCvShortImage.cpp */; };
+		E2064FCA1EA7783E005B3D96 /* Timer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E2064FC81EA7783D005B3D96 /* Timer.cpp */; };
 		E212C821D1064B92DD953A42 /* ofxCvHaarFinder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A16CBF2E8CFE43AF54FE6F5 /* ofxCvHaarFinder.cpp */; };
 		E26B3BAE1E7C157C005C813B /* MusicManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E26B3BAC1E7C157C005C813B /* MusicManager.cpp */; };
 		E29125AE1E560C5700950261 /* OrbTracker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E29125AC1E560C5700950261 /* OrbTracker.cpp */; };
@@ -66,9 +67,6 @@
 		E29527D21E96C62F0099631B /* twist.vert in Resources */ = {isa = PBXBuildFile; fileRef = E29527871E96C62F0099631B /* twist.vert */; };
 		E2ADCFFC1E9CE50400397C7B /* arGui.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E2ADCFFA1E9CE50400397C7B /* arGui.cpp */; };
 		E2ADCFFF1E9E3B5D00397C7B /* ofxiOSPostGlitch.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E2ADCFFD1E9E3B5D00397C7B /* ofxiOSPostGlitch.cpp */; };
-		E2C87DD91E49E79F003035BB /* arAppViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = E2C87DCC1E49E79F003035BB /* arAppViewController.mm */; };
-		E2C87DDA1E49E79F003035BB /* MyAppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = E2C87DCF1E49E79F003035BB /* MyAppDelegate.mm */; };
-		E2C87DDB1E49E79F003035BB /* MyAppViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = E2C87DD11E49E79F003035BB /* MyAppViewController.mm */; };
 		E2E98CC11E66EF1A00522005 /* OpticalFlowTracker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E2E98CBF1E66EF1A00522005 /* OpticalFlowTracker.cpp */; };
 		E2E98CDC1E688D5900522005 /* install.xml in Resources */ = {isa = PBXBuildFile; fileRef = E2E98CC71E688D5900522005 /* install.xml */; };
 		E2E98CDD1E688D5900522005 /* fft.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E2E98CC91E688D5900522005 /* fft.cpp */; };
@@ -275,6 +273,8 @@
 		DCB56F4E9F44E31D571BC9C4 /* index_testing.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = index_testing.h; path = ../../../addons/ofxOpenCv/libs/opencv/include/opencv2/flann/index_testing.h; sourceTree = SOURCE_ROOT; };
 		DEA2EDC0AFD59176FDEDC222 /* ofxCvShortImage.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = ofxCvShortImage.h; path = ../../../addons/ofxOpenCv/src/ofxCvShortImage.h; sourceTree = SOURCE_ROOT; };
 		E14D3EF03E140F5604900412 /* tracking.hpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = tracking.hpp; path = ../../../addons/ofxOpenCv/libs/opencv/include/opencv2/video/tracking.hpp; sourceTree = SOURCE_ROOT; };
+		E2064FC81EA7783D005B3D96 /* Timer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Timer.cpp; sourceTree = "<group>"; };
+		E2064FC91EA7783D005B3D96 /* Timer.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Timer.hpp; sourceTree = "<group>"; };
 		E21FF871B93E31DA43FE7E42 /* vec_distance_detail.hpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = vec_distance_detail.hpp; path = ../../../addons/ofxOpenCv/libs/opencv/include/opencv2/gpu/device/detail/vec_distance_detail.hpp; sourceTree = SOURCE_ROOT; };
 		E26B3BAC1E7C157C005C813B /* MusicManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MusicManager.cpp; sourceTree = "<group>"; };
 		E26B3BAD1E7C157C005C813B /* MusicManager.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = MusicManager.hpp; sourceTree = "<group>"; };
@@ -321,12 +321,6 @@
 		E2ADCFFB1E9CE50400397C7B /* arGui.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = arGui.hpp; sourceTree = "<group>"; };
 		E2ADCFFD1E9E3B5D00397C7B /* ofxiOSPostGlitch.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxiOSPostGlitch.cpp; sourceTree = "<group>"; };
 		E2ADCFFE1E9E3B5D00397C7B /* ofxiOSPostGlitch.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = ofxiOSPostGlitch.hpp; sourceTree = "<group>"; };
-		E2C87DCB1E49E79F003035BB /* arAppViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = arAppViewController.h; sourceTree = "<group>"; };
-		E2C87DCC1E49E79F003035BB /* arAppViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = arAppViewController.mm; sourceTree = "<group>"; };
-		E2C87DCE1E49E79F003035BB /* MyAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyAppDelegate.h; sourceTree = "<group>"; };
-		E2C87DCF1E49E79F003035BB /* MyAppDelegate.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = MyAppDelegate.mm; sourceTree = "<group>"; };
-		E2C87DD01E49E79F003035BB /* MyAppViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyAppViewController.h; sourceTree = "<group>"; };
-		E2C87DD11E49E79F003035BB /* MyAppViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = MyAppViewController.mm; sourceTree = "<group>"; };
 		E2E98CBF1E66EF1A00522005 /* OpticalFlowTracker.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = OpticalFlowTracker.cpp; sourceTree = "<group>"; };
 		E2E98CC01E66EF1A00522005 /* OpticalFlowTracker.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = OpticalFlowTracker.hpp; sourceTree = "<group>"; };
 		E2E98CC71E688D5900522005 /* install.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = install.xml; sourceTree = "<group>"; };
@@ -951,28 +945,6 @@
 			path = src;
 			sourceTree = "<group>";
 		};
-		E2C87DC41E49E79F003035BB /* arAppViewController */ = {
-			isa = PBXGroup;
-			children = (
-				E2C87DCB1E49E79F003035BB /* arAppViewController.h */,
-				E2C87DCC1E49E79F003035BB /* arAppViewController.mm */,
-			);
-			name = arAppViewController;
-			path = AppViewControllers;
-			sourceTree = "<group>";
-		};
-		E2C87DCD1E49E79F003035BB /* MenuUI */ = {
-			isa = PBXGroup;
-			children = (
-				E2C87DCE1E49E79F003035BB /* MyAppDelegate.h */,
-				E2C87DCF1E49E79F003035BB /* MyAppDelegate.mm */,
-				E2C87DD01E49E79F003035BB /* MyAppViewController.h */,
-				E2C87DD11E49E79F003035BB /* MyAppViewController.mm */,
-			);
-			name = MenuUI;
-			path = UI;
-			sourceTree = "<group>";
-		};
 		E2E98CC61E688D5900522005 /* ofxMaxim */ = {
 			isa = PBXGroup;
 			children = (
@@ -1027,8 +999,6 @@
 		E4D8936A11527B74007E1F53 /* src */ = {
 			isa = PBXGroup;
 			children = (
-				E2C87DC41E49E79F003035BB /* arAppViewController */,
-				E2C87DCD1E49E79F003035BB /* MenuUI */,
 				E4D8936B11527B74007E1F53 /* main.mm */,
 				E29125AC1E560C5700950261 /* OrbTracker.cpp */,
 				E29125AD1E560C5700950261 /* OrbTracker.hpp */,
@@ -1038,6 +1008,8 @@
 				E2ADCFFB1E9CE50400397C7B /* arGui.hpp */,
 				E4D8936D11527B74007E1F53 /* arApp.mm */,
 				E4D8936C11527B74007E1F53 /* arApp.h */,
+				E2064FC81EA7783D005B3D96 /* Timer.cpp */,
+				E2064FC91EA7783D005B3D96 /* Timer.hpp */,
 				E29526871E94F2640099631B /* VisualsManager.cpp */,
 				E29526881E94F2640099631B /* VisualsManager.hpp */,
 				E26B3BAC1E7C157C005C813B /* MusicManager.cpp */,
@@ -1206,10 +1178,8 @@
 			files = (
 				E2E98CE21E688D5900522005 /* maxiMFCC.cpp in Sources */,
 				E29125AE1E560C5700950261 /* OrbTracker.cpp in Sources */,
-				E2C87DDB1E49E79F003035BB /* MyAppViewController.mm in Sources */,
 				E4D8936E11527B74007E1F53 /* main.mm in Sources */,
 				E4D8936F11527B74007E1F53 /* arApp.mm in Sources */,
-				E2C87DD91E49E79F003035BB /* arAppViewController.mm in Sources */,
 				250A95BA26587BE85DB0A353 /* ofxCvColorImage.cpp in Sources */,
 				E2ADCFFF1E9E3B5D00397C7B /* ofxiOSPostGlitch.cpp in Sources */,
 				E2E98CDF1E688D5900522005 /* maxiBark.cpp in Sources */,
@@ -1223,8 +1193,8 @@
 				E2E98CE31E688D5900522005 /* maximilian.cpp in Sources */,
 				E2E98CE41E688D5900522005 /* stb_vorbis.c in Sources */,
 				E2E98CDD1E688D5900522005 /* fft.cpp in Sources */,
+				E2064FCA1EA7783E005B3D96 /* Timer.cpp in Sources */,
 				FB09C6B2A1DA0EA217240CB8 /* ofxCvGrayscaleImage.cpp in Sources */,
-				E2C87DDA1E49E79F003035BB /* MyAppDelegate.mm in Sources */,
 				E2E98CC11E66EF1A00522005 /* OpticalFlowTracker.cpp in Sources */,
 				E2ADCFFC1E9CE50400397C7B /* arGui.cpp in Sources */,
 				E212C821D1064B92DD953A42 /* ofxCvHaarFinder.cpp in Sources */,

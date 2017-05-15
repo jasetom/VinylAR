@@ -1,6 +1,6 @@
 //
 //  VisualsManager.hpp
-//  VinylAR2
+//  VinylARt
 //
 //  Created by Tomas on 05/04/2017.
 //
@@ -12,6 +12,8 @@
 #include "ofMain.h"
 #include <stdio.h>
 #include "ofxiOSPostGlitch.hpp"
+#include "ofxMaxim.h"
+#include "Timer.hpp"
 
 
 class VisualsManager {
@@ -19,49 +21,47 @@ public:
     //Setup functions
     void setup();
     void setupShaders();
-    void setupManyBoxes();
     void setupIcoSphere();
-    void setupCone();
     void setupSmallCubes();
     void setupSphereAndCones();
     void setupCylinders();
     void setupBoxesV3();
-
-
-    //Update functions
-    void update(bool isPlaying, int posX, int posY, int posZ, int scale);
-    void updateBoxesV3();
-
+    void setupOther();
+    
+    //Update function
+    void update(bool isPlaying, int posX, int posY, int posZ, float scale);
     
     //Drawing functions
-    void draw(int posX, int posY, int posZ, int scale);
+    void draw(int posX, int posY, int posZ);
     void drawFbo();
-    void drawManyBoxes(float param1, float param2, float param3);
-    void drawIcoSphere(float param1, float param2);
-    void drawCone(float param1, float param2);
+    void drawManyBoxes(float param1, float param2, float param3, int boxStyle);
+    void drawIcoSphere(int icoSphereMode, float param1, float param2);
+    void drawCone(int coneMode, float param1, float param2, float param3);
     void drawSmallCubes(float param1, float param2);
-    void drawSphereAndCones(float param1, float param2);
-    void drawCylinders(float param1, float param2);
+    void drawSphereAndCones(float param1, float param2, float param3);
+    void drawSpheres(float param1);
+    void drawSphr(float param1);
+    void drawCylinders(float param1, float param2, bool param3);
     void drawBoxesV3(float param1, float param2);
-
     
     //Helper functions
+    void switchViz(int vizNum);
     
     //---smallCubes
     void positionAndDrawCubes(ofBoxPrimitive bigBox, vector <ofBoxPrimitive> &smallBoxes);
-
+    
     //Set functions
     void setRMS(float rms);
     void setSpecFlatness(float sf);
     void setSpecCentroid(float sc);
     void setPeakFreq(float pf);
-    void setFFTmagnitudes(float fftm);
-    void setMFFCs(float mffcs);
-    void setOctaveAverages(float oa);
-    void setPitchHistogram(float ph);
-    void setMelBands(float mb);
     void setIsBeat(bool beat);
-
+    
+    void setFFT(ofxMaxiFFT &mfft);
+    void setMFCC(maxiMFCC &myMfcc);
+    void setFFTOcatveAnalyzer(ofxMaxiFFTOctaveAnalyzer &myOctave);
+    
+    
     
 private:
     
@@ -72,6 +72,13 @@ private:
     float specCentroid;
     float peakFreq;
     float FFTmags;
+    //color shceme booleans
+    bool clrScheme0,clrScheme1,clrScheme2,clrScheme3,clrScheme4,clrScheme5,clrScheme6;
+    //pointers to music objects
+    ofxMaxiFFT *fft;
+    ofxMaxiFFTOctaveAnalyzer *octaves;
+    maxiMFCC *mfcc;
+    //more music variables
     double MFFCs;
     float octaveAverages;
     float pitchHistogram;
@@ -98,6 +105,7 @@ private:
     //---
     //---icoSphereViz variables
     ofIcoSpherePrimitive icoSphere;
+    ofIcoSpherePrimitive icoSphere2;
     ofMaterial material;
     vector<ofMeshFace> triangles;
     int icoSphereMode;
@@ -116,6 +124,7 @@ private:
     //---sphereAndConesViz variables
     ofSpherePrimitive sphere;
     vector <ofConePrimitive> cones;
+    vector <ofConePrimitive> cones2;
     //---
     //---cylindersViz variables
     vector <ofCylinderPrimitive> cylinders;
@@ -127,10 +136,18 @@ private:
     ofVboMesh boxSidesV3[ofBoxPrimitive::SIDES_TOTAL];
     vector <ofBoxPrimitive> boxesV3;
     vector <ofVboMesh> boxesSidesV3[ofBoxPrimitive::SIDES_TOTAL];
-    //---
+    int rndmNum;
+    //----
+    //---WireframeSphere
+    ofSpherePrimitive sphr;
     
-
-
+    //---Timer variables
+    Timer switchTimer;
+    Timer shadersTimer;
+    int vizNum;
+    int shaderNum;
+    
+    ofShader shaderr;
     
     
 };

@@ -1,6 +1,6 @@
 //
-// Adapted by Tomas Jasevicius from:
-//
+// Tomas Jasevicius
+// VinylARt
 
 #include "arApp.h"
 

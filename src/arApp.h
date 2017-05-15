@@ -1,5 +1,6 @@
 //
 // Created by Tomas Jasevicius
+// VinylARt
 //
 
 //screen size of iPhone5
@@ -15,9 +16,9 @@
 #include "VisualsManager.hpp"
 #include "arGui.hpp"
 
-
 class arApp : public ofxiOSApp {
 	
+    
     public:
         void setup();
         void update();
@@ -53,33 +54,16 @@ class arApp : public ofxiOSApp {
     /* Music player */
     MusicManager musicMan;
     double playingSound; //variable where we store data when sound is playing
-    
     int initialBufferSize;
     float * lAudio; //left audio output
     float * rAudio; //right audio output
     
     /* Basic GUI */
     arGui gui;
-    
-//     ofTrueTypeFont verdana14;
-//    int appState;
-//    ofPoint detectButton;
-//    bool bDetectButton;
-//    int detectBtnRadius;
-//    
-//    ofRectangle prevSongButton;
-//    bool bPrevButton;
-//    ofRectangle nextSongButton;
-//    bool bNextButton;
+    bool bPause;
     
     /* Visuals Manager */
     VisualsManager vizMan;
-    
-//    /* Postglitch shaders */
-//    ofxiOSPostGlitch effectShaders;
-//    int effectNumber;
-//    ofFbo myFbo;
-    
     
     /* Other variables */
     int appState;

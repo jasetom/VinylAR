@@ -1,6 +1,6 @@
 //
 //  OrbTracker.hpp
-//  VinylAR2
+//  VinylARt
 //
 //  Created by Tomas on 16/02/2017.
 //
@@ -26,7 +26,7 @@ class OrbTracker {
 public:
     
     OrbTracker();
-    
+    //basic function declarations
     void setup();
     void draw();
     void drawFeatures();
@@ -45,7 +45,7 @@ public:
     // calculate the perspective transform and apply to bounds polygon
     void createHomography(vector<KeyPoint> keyPoints, vector <Point2f> bounds);
     
-    /*Getters*/
+    /*Getter functions*/
     vector <KeyPoint> getImgKeyPoints(int n);
     vector <Point2f> getImgBoundaries(int n);
     vector <KeyPoint> getCameraKeyPoints();
@@ -56,34 +56,36 @@ public:
     Mat getImgDescriptors(int n);
     int getDetectedImgNumber();
     int getGoodMatchesSize();
-    
+    ofImage * getAlbumImage(int imgNo);
+
 private:
-    ofImage markerImg;
+    //required variabes
+    ofImage markerImg1,markerImg2,markerImg3;
     float minMatches;
     int detectedImgNumber;
-    int nFeatures;
-    // Drawing options
+    //drawing options for debug
     bool bDrawImage;
     bool bDrawFeatures;
     bool bDrawDescriptors;
     bool bDrawHomography;
     
-    vector<KeyPoint> cameraKeyPoints;			// keypoints in the current scene
-    Mat cameraDescriptors;						// descriptors in the current scene
-    Mat homography;								// prespective transform between original and new features
+    vector<KeyPoint> cameraKeyPoints;                       // keypoints in the current scene
+    Mat cameraDescriptors;                                  // descriptors in the current scene
+    Mat homography;                                         // prespective transform between original and new features
     
-    vector <Point2f> imgBoundariesTransformed;	// perspective transformed bounds
-    vector <vector <Point2f>> manyImgBoundaries;
-    vector <vector <Point2f>> manyimgBoundariesTransformed;
-    vector <vector <KeyPoint>> manyImgKeyPoints;
-    vector <cv::Mat> manyImgDescriptors;
+    vector <Point2f> imgBoundariesTransformed;              // perspective transformed boundaries
+    vector <vector <Point2f>> manyImgBoundaries;            // many images analysed boundaries vector of points
+    vector <vector <Point2f>> manyimgBoundariesTransformed; // many images transformed boundaries
+    vector <vector <KeyPoint>> manyImgKeyPoints;            // many images keypoints
+    vector <cv::Mat> manyImgDescriptors;                    // many images descriptors
     
-    OrbFeatureDetector detector;
-    OrbDescriptorExtractor extractor;
-    BFMatcher matcher; //brute force matcher
+    //OpenCV objects
+    OrbFeatureDetector detector;        //feature detector
+    OrbDescriptorExtractor extractor;   //descriptors extractor
+    BFMatcher matcher;                  //brute force matcher
     
-    vector<DMatch> goodMatches;	// matches between original and new descriptors
-    vector<Point2f> goodMatchesAsKeyPoints;
+    vector<DMatch> goodMatches;             // matches between original and new descriptors
+    vector<Point2f> goodMatchesAsKeyPoints; //good matches coverted to keypoints
     
 };
 

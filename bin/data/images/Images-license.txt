@@ -1,0 +1,25 @@
+Images License
+
+All of the images used in this project are used for educational purposes and they belong to the corresponding owners listed below:
+
+Album picture1:
+Redd Angelo
+https://unsplash.com/@reddangelo16
+Man walking on railroads:
+https://unsplash.com/search/railway-walking?photo=60fa9BMxvpE
+
+Album picture2:
+Clem Onojeghuo
+https://unsplash.com/@clemono2
+Old man walking by graffiti wall:
+https://unsplash.com/search/old-muslim-man?photo=YBboh5nH1V0
+
+Album picture3:
+Vuforia
+https://developer.vuforia.com
+Sample image target:
+https://developer.vuforia.com/sites/default/files/sample-apps/targets/imagetargets_targets.pdf
+
+iPhone vector:
+Freepik
+http://www.freepik.com/free-vector/background-of-mobile-with-icons-sketches_956059.htm
